@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.skeleton.ui.fragment.home.HomeFragment"
+        android:label="Home Fragment" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.skeleton.ui.fragment.setting.SettingFragment"
+        android:label="Setting Fragment" />
+
+    <!-- FOUR MAIN SCREEN-->
+    <action
+        android:id="@+id/toHome"
+        app:destination="@id/homeFragment"
+        app:enterAnim="@anim/enter_fade_in"
+        app:exitAnim="@anim/exit_fade_out"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/navigation_graph" />
+
+    <action
+        android:id="@+id/toSetting"
+        app:destination="@id/settingFragment"
+        app:enterAnim="@anim/enter_fade_in"
+        app:exitAnim="@anim/exit_fade_out"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/homeFragment" />
+</navigation>
