@@ -7,6 +7,7 @@ import com.example.skeleton.data.repository.SettingRepository
 import com.example.skeleton.ui.fragment.home.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SettingViewModel(
@@ -25,11 +26,30 @@ class SettingViewModel(
     }
 
 
+    init {
+        observeLanguage()
+    }
 
-    val languageFlow = settingRepository.languageFlow
-    fun setLanguage(language: Language) {
+
+    private fun observeLanguage() {
         viewModelScope.launch {
-            settingRepository.setLanguage(language)
+            settingRepository. languageFlow.collectLatest { language ->
+                _uiState.value = _uiState.value.copy(selectedLanguage = language)
+            }
+        }
+    }
+
+
+    fun setLanguage() {
+        viewModelScope.launch {
+            val selectedLanguage = _uiState.value.selectedLanguage
+            settingRepository.setLanguage(selectedLanguage)
+        }
+    }
+
+    fun changeLanguage(language: Language) {
+        viewModelScope.launch {
+            _uiState.value = uiState.value.copy(selectedLanguage = language)
         }
     }
 }

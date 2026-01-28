@@ -35,7 +35,7 @@ fun CoreLayout(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .background(color = Color.DarkGray)
+            .background(color = Color.Black)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

@@ -15,6 +15,11 @@
         android:name="com.example.skeleton.ui.fragment.setting.SettingFragment"
         android:label="Setting Fragment" />
 
+    <fragment
+        android:id="@+id/settingLanguageFragment"
+        android:name="com.example.skeleton.ui.fragment.setting.SettingLanguageFragment"
+        android:label="Setting Language Fragment" />
+
     <!-- FOUR MAIN SCREEN-->
     <action
         android:id="@+id/toHome"
@@ -31,4 +36,15 @@
         app:exitAnim="@anim/exit_fade_out"
         app:launchSingleTop="true"
         app:popUpTo="@id/homeFragment" />
+
+    <!--CONTENT FRAGMENTS-->
+    <action
+        android:id="@+id/toSettingLanguage"
+        app:destination="@id/settingLanguageFragment"
+        app:enterAnim="@anim/enter_slide_in_right"
+        app:exitAnim="@anim/exit_slide_out_left"
+        app:popEnterAnim="@anim/enter_slide_in_left"
+        app:popExitAnim="@anim/exit_slide_out_right"
+        app:popUpToInclusive="true"/>
+
 </navigation>

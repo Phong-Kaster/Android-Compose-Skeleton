@@ -21,7 +21,6 @@ class HomeFragment : CoreFragment() {
         super.ComposeView()
         HomeLayout(
             uiState = viewModel.uiState.collectAsState().value,
-
         )
     }
 }
@@ -31,13 +30,9 @@ private fun HomeLayout(
     uiState: HomeUiState,
 ) {
     CoreLayout(
-        modifier = Modifier.background(color = Color.Black),
+        modifier = Modifier,
         topBar = {
-            CoreTopBar(
-                title = "Home",
-                leftIcon = R.drawable.ic_back,
-                rightIcon = R.drawable.ic_forward,
-            )
+            CoreTopBar(title = "Home")
         },
         bottomBar = {
             CoreBottomBar()

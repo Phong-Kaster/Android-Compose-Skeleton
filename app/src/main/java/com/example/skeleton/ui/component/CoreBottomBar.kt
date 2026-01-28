@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
@@ -29,8 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -137,7 +134,7 @@ private fun BottomBarElement(
             painter = painterResource(drawableId),
             contentDescription = stringResource(id = stringId),
             modifier = Modifier.size(24.dp),
-            tint = if (enable) Color.Blue else Color.White,
+            tint = Color.White,
         )
 
         if (enable) {
@@ -147,7 +144,7 @@ private fun BottomBarElement(
                     fontSize = 14,
                     fontWeight = 600,
                 ),
-                color = if (enable) Color.Blue else Color.White,
+                color =  Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

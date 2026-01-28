@@ -79,4 +79,11 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.androidx.compose)
+
+    // Lottie
+    implementation(libs.lottie.compose)
+
+    // Google Play in-app review - https://developer.android.com/guide/playcore/in-app-review/kotlin-java
+    implementation(libs.google.play.review)
+    implementation(libs.google.play.review.ktx)
 }

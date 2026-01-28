@@ -16,6 +16,8 @@ constraintLayoutCompose = "1.0.1"
 koin-bom = "4.1.1"
 datastore = "1.2.0"
 navigationCompose = "2.9.6"
+lottieCompose = "6.7.1"
+google-play-review = "2.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +56,13 @@ koin-test = { module = "io.insert-koin:koin-test" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+
+# Lottie
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+
+# google play review
+google-play-review = { group = "com.google.android.play", name = "review", version.ref = "google-play-review" }
+google-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "google-play-review" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
