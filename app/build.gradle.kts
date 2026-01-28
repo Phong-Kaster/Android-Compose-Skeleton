@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -86,4 +87,10 @@ dependencies {
     // Google Play in-app review - https://developer.android.com/guide/playcore/in-app-review/kotlin-java
     implementation(libs.google.play.review)
     implementation(libs.google.play.review.ktx)
+
+    // Save data in a local database using Room - https://developer.android.com/training/data-storage/room#setup
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
 }

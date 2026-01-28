@@ -2,6 +2,7 @@ package com.example.skeleton
 
 import android.app.Application
 import com.example.skeleton.injection.appModule
+import com.example.skeleton.injection.databaseModule
 import com.example.skeleton.injection.datastoreModule
 import com.example.skeleton.injection.repositoryModule
 import com.example.skeleton.injection.viewModelModule
@@ -20,12 +21,7 @@ class MainApplication : Application() {
 
             androidLogger()
             androidContext(this@MainApplication)
-            modules(
-                appModule,
-                datastoreModule,
-                repositoryModule,
-                viewModelModule,
-            )
+            modules(appModule)
         }
     }
 }

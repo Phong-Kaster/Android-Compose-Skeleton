@@ -33,7 +33,7 @@ val LocalNavController = staticCompositionLocalOf<NavController?> { null }
 open class CoreFragment : Fragment() {
 
 //    @Inject
-//    lateinit var settingRepository: SettingRepository
+//    lateinit var settingRepository: SettingRepositoryImpl
     protected open val TAG: String = this.javaClass.simpleName
 
     /** Dark Mode*/
