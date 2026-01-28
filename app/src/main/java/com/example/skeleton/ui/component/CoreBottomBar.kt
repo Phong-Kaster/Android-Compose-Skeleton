@@ -82,7 +82,7 @@ fun CoreBottomBar() {
                 .padding(horizontal = 12.dp)
                 .size(48.dp)
                 .clip(shape = CircleShape)
-                .background(color = Color.Blue)
+                .background(color = Color(0xFF35A0F5))
 
                 .clickable { showBottomSheet = !showBottomSheet },
         ) {

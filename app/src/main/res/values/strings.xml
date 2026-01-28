@@ -22,4 +22,10 @@
     <string name="describe_your_feedback">Enter your feedback…</string>
     <string name="submit">Submit</string>
     <string name="thanks_for_your_feedback">Thanks for your feedback !</string>
+
+    <string name="notification">Notification</string>
+    <string name="location">Location</string>
+    <string name="allow_notification_to_send_you">Allow notification to send you important updates and alerts</string>
+    <string name="allow_location_to_help_you">Allow location access to provide you with relevant features and better experience</string>
+
 </resources>
