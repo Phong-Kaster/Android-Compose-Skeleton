@@ -13,5 +13,5 @@ val viewModelModule = module {
     viewModel { SettingViewModel(settingRepositoryImpl = get()) }
 
     // Home View Model
-    viewModel { HomeViewModel(userActionRepository = get()) }
+    viewModel { HomeViewModel(userActionRepository = get(), postRepository = get()) }
 }

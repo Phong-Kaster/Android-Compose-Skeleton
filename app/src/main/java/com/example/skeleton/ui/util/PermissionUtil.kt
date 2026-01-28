@@ -1,4 +1,4 @@
-package com.example.skeleton.util
+package com.example.skeleton.ui.util
 
 import android.Manifest
 import android.content.Context

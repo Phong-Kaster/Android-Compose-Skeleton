@@ -6,9 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
-import com.example.skeleton.util.LanguageUtil
-import com.example.skeleton.util.NetworkUtil
-import com.example.skeleton.util.SystemBarUtil
+import com.example.skeleton.ui.util.LanguageUtil
+import com.example.skeleton.ui.util.NetworkUtil
+import com.example.skeleton.ui.util.SystemBarUtil
 
 open class CoreActivity() : AppCompatActivity() {
 

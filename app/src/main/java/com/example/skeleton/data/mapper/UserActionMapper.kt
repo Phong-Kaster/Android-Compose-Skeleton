@@ -1,4 +1,4 @@
-package com.example.skeleton.data.database.mapper
+package com.example.skeleton.data.mapper
 
 import com.example.skeleton.data.database.local.entity.UserActionEntity
 import com.example.skeleton.domain.model.UserAction

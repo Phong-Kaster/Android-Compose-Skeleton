@@ -21,7 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.skeleton.ui.theme.MyApplicationTheme
-import com.example.skeleton.util.NetworkUtil
+import com.example.skeleton.ui.util.NetworkUtil
 import kotlinx.coroutines.launch
 import java.util.Locale
 

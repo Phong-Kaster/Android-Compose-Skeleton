@@ -26,7 +26,7 @@ import com.example.skeleton.core.CoreLayout
 import com.example.skeleton.ui.component.CoreTopBar4
 import com.example.skeleton.ui.fragment.setting.component.LanguageItem
 import com.example.skeleton.ui.theme.customizedTextStyle
-import com.example.skeleton.util.NavigationUtil.safeNavigateUp
+import com.example.skeleton.ui.util.NavigationUtil.safeNavigateUp
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 

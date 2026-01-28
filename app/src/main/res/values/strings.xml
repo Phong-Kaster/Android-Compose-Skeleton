@@ -28,4 +28,8 @@
     <string name="allow_notification_to_send_you">Allow notification to send you important updates and alerts</string>
     <string name="allow_location_to_help_you">Allow location access to provide you with relevant features and better experience</string>
 
+    <string name="please_check_your_internet_connection">Please check your internet connection</string>
+    <string name="the_server_is_busy">The server is currently busy. Please try again later</string>
+    <string name="we_are_sorry">We’re sorry, something went wrong. Please try again.</string>
+    <string name="request_timed_out">Request timed out</string>
 </resources>

@@ -4,12 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,9 +22,9 @@ import com.example.skeleton.ui.component.CoreBottomBar
 import com.example.skeleton.ui.component.CoreTopBar
 import com.example.skeleton.ui.component.ratebottomsheet.RateBottomSheet
 import com.example.skeleton.ui.fragment.setting.component.SettingItem
-import com.example.skeleton.util.AppUtil
-import com.example.skeleton.util.NavigationUtil.safeNavigate
-import com.example.skeleton.util.RateUtil
+import com.example.skeleton.ui.util.AppUtil
+import com.example.skeleton.ui.util.NavigationUtil.safeNavigate
+import com.example.skeleton.ui.util.RateUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingFragment : CoreFragment() {

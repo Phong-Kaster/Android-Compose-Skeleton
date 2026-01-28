@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.skeleton.core.LocalNavController
 import com.example.skeleton.domain.enums.BottomBarDestination
 import com.example.skeleton.ui.theme.customizedTextStyle
-import com.example.skeleton.util.NavigationUtil
+import com.example.skeleton.ui.util.NavigationUtil
 
 
 @Composable
