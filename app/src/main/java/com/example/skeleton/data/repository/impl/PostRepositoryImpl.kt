@@ -1,16 +1,15 @@
-package com.example.skeleton.data.repository
+package com.example.skeleton.data.repository.impl
 
 import com.example.skeleton.common.Resource
 import com.example.skeleton.data.mapper.toDomain
-import com.example.skeleton.data.remote.post.PostService
+import com.example.skeleton.data.remote.api.PostApi
 import com.example.skeleton.data.remote.util.safeApiCallFlow
 import com.example.skeleton.domain.model.Post
 import com.example.skeleton.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class PostRepositoryImpl(
-    private val api: PostService
+    private val api: PostApi
 ) : PostRepository {
 
     override fun observePosts(): Flow<Resource<List<Post>>> =
@@ -22,5 +21,3 @@ class PostRepositoryImpl(
         api.getPosts()
     }
 }
-
-

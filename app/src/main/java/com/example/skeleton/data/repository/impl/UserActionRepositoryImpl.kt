@@ -1,4 +1,4 @@
-package com.example.skeleton.data.repository
+package com.example.skeleton.data.repository.impl
 
 import com.example.skeleton.data.database.local.dao.UserActionDao
 import com.example.skeleton.data.mapper.toDomain

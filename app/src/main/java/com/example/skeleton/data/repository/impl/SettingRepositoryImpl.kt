@@ -1,5 +1,4 @@
-package com.example.skeleton.data.repository
-
+package com.example.skeleton.data.repository.impl
 
 import com.example.skeleton.common.Language
 import com.example.skeleton.data.datastore.SettingDatastore
@@ -34,4 +33,3 @@ class SettingRepositoryImpl(
     override suspend fun setEnableDarkMode(value: Boolean) =
         settingDatastore.setEnableDarkMode(value)
 }
-

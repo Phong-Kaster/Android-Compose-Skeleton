@@ -1,4 +1,4 @@
-package com.example.skeleton.data.remote.post
+package com.example.skeleton.data.remote.dto
 
 import kotlinx.serialization.Serializable
 

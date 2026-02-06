@@ -3,7 +3,7 @@ package com.example.skeleton.ui.fragment.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skeleton.common.Language
-import com.example.skeleton.data.repository.SettingRepositoryImpl
+import com.example.skeleton.data.repository.impl.SettingRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
