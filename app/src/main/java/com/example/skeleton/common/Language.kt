@@ -5,18 +5,21 @@ import androidx.annotation.StringRes
 import com.example.skeleton.R
 import java.util.Locale
 
+/**
+ * [Can get more country icon here](https://uxwing.com/?)
+ */
 enum class Language(
     val code: String,
-    @StringRes val text: Int,
+    @StringRes val displayText: Int,
     @DrawableRes val drawable: Int,
 ) {
-    English(code = "en", text = R.string.english, drawable = R.drawable.ic_language_english),
-    German(code = "de", text = R.string.german, drawable = R.drawable.ic_language_german),
-    French(code = "fr", text = R.string.french, drawable = R.drawable.ic_language_french),
-    Hindi(code = "hi", text = R.string.hindi, drawable = R.drawable.ic_language_hindi),
-    Japanese(code = "ja", text = R.string.japanese, drawable = R.drawable.ic_language_japanese),
-    Korean(code = "ko", text = R.string.korean, drawable = R.drawable.ic_language_korean),
-    Vietnam(code = "vi", text = R.string.vietnamese, drawable = R.drawable.ic_language_vietnamese),
+    English(code = "en", displayText = R.string.english, drawable = R.drawable.ic_language_english),
+    German(code = "de", displayText = R.string.german, drawable = R.drawable.ic_language_german),
+    French(code = "fr", displayText = R.string.french, drawable = R.drawable.ic_language_french),
+    Hindi(code = "hi", displayText = R.string.hindi, drawable = R.drawable.ic_language_hindi),
+    Japanese(code = "ja", displayText = R.string.japanese, drawable = R.drawable.ic_language_japanese),
+    Korean(code = "ko", displayText = R.string.korean, drawable = R.drawable.ic_language_korean),
+    Vietnam(code = "vi", displayText = R.string.vietnamese, drawable = R.drawable.ic_language_vietnamese),
     ;
 
     companion object {

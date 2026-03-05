@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     // Setting View Model
-    viewModel { SettingViewModel(settingRepositoryImpl = get()) }
+    viewModel { SettingViewModel(settingRepository = get()) }
 
     // Home View Model
     viewModel { HomeViewModel(userActionRepository = get(), postRepository = get()) }

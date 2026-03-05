@@ -4,9 +4,31 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.net.toUri
 
 object AppUtil {
+
+    /**
+     * 826 là chiều cao của màn hình theo FIGMA, đổi lại số này nếu thiet kế figma được vẽ trên màn hình khác
+     * For example
+     *  Text( text = "Hello World",
+     *      fontSize = 16.sp * screenHeightScale
+     *)
+     * */
+    val figmaScaleHeight: Float
+        @Composable get() = LocalConfiguration.current.screenHeightDp / 844f
+
+    /**
+     * 392 là chiều rộng của màn hình theo FIGMA, đổi lại số này nếu thiet kế figma được vẽ trên màn hình khác
+     * For example
+     *  Text( text = "Hello World",
+     *      fontSize = 16.sp * screenWidthScale
+     *)
+     * */
+    val figmaScaleWidth: Float
+        @Composable get() = LocalConfiguration.current.screenWidthDp / 390f
     fun openWebsite(context: Context, url: String) {
         try {
             val uri = url.toUri()

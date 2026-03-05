@@ -1,4 +1,4 @@
-package com.example.skeleton.ui.fragment.setting
+package com.example.skeleton.ui.fragment.setting.language
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skeleton.R
@@ -24,25 +25,34 @@ import com.example.skeleton.common.Language
 import com.example.skeleton.core.CoreFragment
 import com.example.skeleton.core.CoreLayout
 import com.example.skeleton.ui.component.CoreTopBar4
-import com.example.skeleton.ui.fragment.setting.component.LanguageItem
+import com.example.skeleton.ui.fragment.setting.SettingUiState
+import com.example.skeleton.ui.fragment.setting.SettingViewModel
+import com.example.skeleton.ui.fragment.setting.language.component.LanguageItem
 import com.example.skeleton.ui.theme.customizedTextStyle
+import com.example.skeleton.ui.util.LocaleManager
 import com.example.skeleton.ui.util.NavigationUtil.safeNavigateUp
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class SettingLanguageFragment : CoreFragment() {
 
+
     private val viewModel: SettingViewModel by viewModel()
+
+    private val localeManager: LocaleManager by inject()
 
     @Composable
     override fun ComposeView() {
         super.ComposeView()
+        val uiState = viewModel.uiState.collectAsState().value
         SettingLanguageLayout(
-            uiState = viewModel.uiState.collectAsState().value,
+            uiState = uiState,
             onBack = { safeNavigateUp() },
             onChangeLanguage = { language -> viewModel.changeLanguage(language = language) },
             onConfirm = {
                 viewModel.setLanguage()
+                localeManager.applyLocale(languageCode = uiState.selectedLanguage.code)
                 safeNavigateUp()
             },
         )
@@ -60,7 +70,7 @@ private fun SettingLanguageLayout(
     CoreLayout(
         topBar = {
             CoreTopBar4(
-                title = "Language",
+                title = stringResource(R.string.languages),
                 backIcon = R.drawable.ic_back_2,
                 onBack = onBack,
                 actionContent = {

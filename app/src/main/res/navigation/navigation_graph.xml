@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/settingLanguageFragment"
-        android:name="com.example.skeleton.ui.fragment.setting.SettingLanguageFragment"
+        android:name="com.example.skeleton.ui.fragment.setting.language.SettingLanguageFragment"
         android:label="Setting Language Fragment" />
 
     <!-- FOUR MAIN SCREEN-->

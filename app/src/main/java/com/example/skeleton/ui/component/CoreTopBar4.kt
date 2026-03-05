@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,17 +47,18 @@ fun CoreTopBar4(
 ) {
     Column(modifier = modifier) {
 
-//        Spacer(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(top = 8.dp)
-//                .dynamicStatusBarPadding()
-//        )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .dynamicStatusBarPadding()
+        )
+
 
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .background(color = Color.Transparent)
+                .padding(16.dp)
         ) {
             if (onBack != null) {
                 Box(

@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,70 +37,74 @@ fun CoreTopBar(
     onClickRight: () -> Unit = {},
 ) {
 
-    Column() {
-
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.Transparent)
-            .statusBarsPadding()
-            .padding(16.dp),
-    ) {
-        if (title != null) {
-            Text(
-                text = title,
-                style = customizedTextStyle(
-                    fontSize = 18,
-                    fontWeight = 600
-                ),
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
-        }
-
-
-        if (leftIcon != null) {
-            IconButton(
-                onClick = {
-                    onClickLeft()
-                },
-                modifier = Modifier
-                    .clip(shape = CircleShape)
-                    .background(color = Color.White)
-                    .size(24.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = leftIcon),
-                    contentDescription = null,
-                    tint = leftBackground,
-                    modifier = Modifier.size(15.dp),
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .dynamicStatusBarPadding()
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.Transparent)
+                .padding(16.dp),
+        ) {
+            if (title != null) {
+                Text(
+                    text = title,
+                    style = customizedTextStyle(
+                        fontSize = 18,
+                        fontWeight = 600
+                    ),
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.Center)
                 )
             }
-        }
 
 
-        if (rightIcon != null) {
-            IconButton(
-                onClick = {
-                    onClickRight()
-                },
-                modifier = Modifier
-                    .clip(shape = CircleShape)
-                    .background(color = Color.White)
-                    .size(24.dp)
-                    .align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(id = rightIcon),
-                    contentDescription = null,
-                    tint = rightBackground,
-                    modifier = Modifier.size(15.dp)
-                )
+            if (leftIcon != null) {
+                IconButton(
+                    onClick = {
+                        onClickLeft()
+                    },
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .background(color = Color.White)
+                        .size(24.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = leftIcon),
+                        contentDescription = null,
+                        tint = leftBackground,
+                        modifier = Modifier.size(15.dp),
+                    )
+                }
+            }
+
+
+            if (rightIcon != null) {
+                IconButton(
+                    onClick = {
+                        onClickRight()
+                    },
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .background(color = Color.White)
+                        .size(24.dp)
+                        .align(Alignment.CenterEnd)
+                ) {
+                    Icon(
+                        painter = painterResource(id = rightIcon),
+                        contentDescription = null,
+                        tint = rightBackground,
+                        modifier = Modifier.size(15.dp)
+                    )
+                }
             }
         }
     }
+
 }
 
 @Preview
