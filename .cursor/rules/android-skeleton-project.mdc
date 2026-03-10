@@ -1,0 +1,36 @@
+---
+description: Android skeleton project — tech stack, Clean Architecture, and conventions
+alwaysApply: true
+---
+
+# Android Compose Skeleton — Project Rules
+
+## Purpose
+This is a **reusable skeleton app**. Code and structure should stay easy to copy into new projects. Prefer clear layers and config over one-off hacks.
+
+## Tech Stack
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material3
+- **DI:** Koin
+- **Navigation:** Navigation Component (Fragment-based, Compose inside fragments)
+- **Network:** Ktor client
+- **Local:** Room, DataStore
+- **Config:** `core.config.AppConfig` (API base URL, timeouts); `common.Constant` (app URLs, datastore name)
+
+## Clean Architecture — Package Layout
+- **domain/** — `model/`, `repository/` (interfaces only). No Android or data dependencies.
+- **data/** — `remote/api/` (ApiPath, *Api classes), `remote/dto/`, `remote/util/` (e.g. safeApiCallFlow), `mapper/`, `repository/impl/`.
+- **core/** — `config/` (AppConfig), base classes (CoreActivity, CoreFragment, CoreLayout).
+- **common/** — Shared types and constants: Resource, Constant, Language, extensions (e.g. validation).
+- **ui/** — Fragments, ViewModels, components, theme, util (e.g. UiErrorMapper).
+- **injection/** — Koin modules (appModule includes database, datastore, repository, viewModel, network, locale).
+
+## API & Data Conventions
+- Put endpoint paths in **data/remote/api/ApiPath.kt** (use `AppConfig` for base URLs).
+- New API: add *Api in `data/remote/api/`, DTO in `data/remote/dto/`, mapper in `data/mapper/`, repository interface in `domain/repository/`, impl in `data/repository/impl/`, bind in NetworkModule + RepositoryModule.
+- Wrap API calls in **safeApiCallFlow**; expose **Resource&lt;T&gt;** (Loading/Success/Error). Map errors in UI with **Throwable.toUiMessage(context)** (UiErrorMapper).
+
+## Naming & Style
+- Repository interfaces: `XxxRepository`. Implementations: `XxxRepositoryImpl` in `data/repository/impl/`.
+- API services: `XxxApi` in `data/remote/api/`. DTOs: `XxxDto` in `data/remote/dto/`.
+- Keep new shared utilities/extensions in **common** (e.g. `common.extensions`); keep UI-only helpers in **ui/util**.
