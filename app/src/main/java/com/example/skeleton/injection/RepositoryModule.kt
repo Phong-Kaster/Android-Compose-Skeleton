@@ -14,5 +14,5 @@ val repositoryModule = module {
 
     single<UserActionRepository> { UserActionRepositoryImpl(dao = get()) }
 
-    single<PostRepository> { PostRepositoryImpl(api = get()) }
+    single<PostRepository> { PostRepositoryImpl(api = get(), dao = get()) }
 }

@@ -8,6 +8,25 @@ alwaysApply: true
 ## Purpose
 This is a **reusable skeleton app**. Code and structure should stay easy to copy into new projects. Prefer clear layers and config over one-off hacks.
 
+## Core rules
+- Always write code that can be easier expandable
+- Always write code that can be easier reused from a project to other projects
+- Prefer write code that easier to understand for human than write code that has high performance
+- Always add document and write example for each class or functions even if it's just writing a short paragraph. Higher priority to complex functions and related logic
+- Leverage utilize use-case to carry out a complex action that needs time to compute then base on the result to decide. Naming use-case must represent purpose, for example: CreateOngoingUseCase, CreateDailyNotificationUseCase
+
+## Naming & Style
+- Repository interfaces: `XxxRepository`. Implementations: `XxxRepositoryImpl` in `data/repository/impl/`.
+For example: if you need repository interface `SettingRepository` in `domain/repository` then implementation is `SettingRepositoryImpl` in `data/repository/impl`
+
+- API services: `XxxApi` in `data/remote/api/`. DTOs: `XxxDto` in `data/remote/dto/`.
+For example: if you need Post API then create PostApi in `remote/api/PostApi` and create related DTO classes in `data/remote/dto/post/….`
+
+- Keep new shared utilities/extensions in **common** (e.g. `common.extensions`); keep UI-only helpers in **ui/util**.
+For example: if need date and time extensions then create DateAndTimeExtension in `common/extensions`
+For example: if date and time needs complicated functions then create package as `common/extension/date_and_time` and separate 2 files include BasicDateAndTimeExtension and AdvancedDataAndTimeExtension
+
+
 ## Tech Stack
 - **Language:** Kotlin
 - **UI:** Jetpack Compose + Material3
@@ -29,8 +48,3 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 - Put endpoint paths in **data/remote/api/ApiPath.kt** (use `AppConfig` for base URLs).
 - New API: add *Api in `data/remote/api/`, DTO in `data/remote/dto/`, mapper in `data/mapper/`, repository interface in `domain/repository/`, impl in `data/repository/impl/`, bind in NetworkModule + RepositoryModule.
 - Wrap API calls in **safeApiCallFlow**; expose **Resource&lt;T&gt;** (Loading/Success/Error). Map errors in UI with **Throwable.toUiMessage(context)** (UiErrorMapper).
-
-## Naming & Style
-- Repository interfaces: `XxxRepository`. Implementations: `XxxRepositoryImpl` in `data/repository/impl/`.
-- API services: `XxxApi` in `data/remote/api/`. DTOs: `XxxDto` in `data/remote/dto/`.
-- Keep new shared utilities/extensions in **common** (e.g. `common.extensions`); keep UI-only helpers in **ui/util**.
