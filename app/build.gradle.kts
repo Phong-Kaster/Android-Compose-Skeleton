@@ -73,7 +73,10 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.core)
 
     // Material (for Fragment/AppCompat compatibility)
-    implementation("com.google.android.material:material:1.11.0")
+    implementation(libs.google.material)
+
+    // Accompanist Permissions (Compose permission handling, e.g. notification/location)
+    implementation(libs.accompanist.permissions)
 
     // Koin for Dependency Injection
     implementation(platform(libs.koin.bom))
@@ -94,10 +97,10 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    implementation("io.ktor:ktor-client-core:2.3.12")
-    implementation("io.ktor:ktor-client-okhttp:2.3.12")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlinx.serialization.json)
 }

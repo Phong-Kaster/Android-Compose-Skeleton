@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skeleton.R
+import android.os.Build
+import com.example.skeleton.ui.theme.ColorBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,10 +49,12 @@ fun HomePermissionBottomSheet(
     enable: Boolean,
     isNotificationEnable: Boolean = false,
     isLocationEnable: Boolean = false,
+    isExactAlarmEnable: Boolean = true,
     onDismiss: () -> Unit = {},
     onGrantNotification: () -> Unit = {},
     onGrantLocation: () -> Unit = {},
-){
+    onGrantExactAlarm: () -> Unit = {},
+) {
     if (!enable) return
     ModalBottomSheet(
         sheetState = rememberModalBottomSheetState(
@@ -65,11 +69,12 @@ fun HomePermissionBottomSheet(
             onDismiss = onDismiss,
             isNotificationEnable = isNotificationEnable,
             isLocationEnable = isLocationEnable,
+            isExactAlarmEnable = isExactAlarmEnable,
             onGrantNotification = onGrantNotification,
             onGrantLocation = onGrantLocation,
+            onGrantExactAlarm = onGrantExactAlarm,
         )
     }
-
 }
 
 @Composable
@@ -77,10 +82,11 @@ private fun PhotosPermissionBottomSheetLayout(
     onDismiss: () -> Unit = {},
     isNotificationEnable: Boolean = false,
     isLocationEnable: Boolean = false,
+    isExactAlarmEnable: Boolean = true,
     onGrantNotification: () -> Unit = {},
     onGrantLocation: () -> Unit = {},
+    onGrantExactAlarm: () -> Unit = {},
 ) {
-
     Column {
         Column(
             verticalArrangement = Arrangement.Top,
@@ -108,13 +114,13 @@ private fun PhotosPermissionBottomSheetLayout(
             Icon(
                 modifier = Modifier.size(107.dp),
                 painter = painterResource(R.drawable.ic_gallery),
-                tint = Color(0xFF35A0F5),
+                tint = ColorBlue,
                 contentDescription = "",
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Camera switch & rationale
+            // Notification switch & rationale
             PermissionSwitch(
                 title = stringResource(R.string.notification),
                 description = stringResource(R.string.allow_notification_to_send_you),
@@ -128,13 +134,28 @@ private fun PhotosPermissionBottomSheetLayout(
                     .height(16.dp)
             )
 
-            // Library switch & rationale
+            // Location switch & rationale
             PermissionSwitch(
                 title = stringResource(R.string.location),
                 description = stringResource(R.string.allow_location_to_help_you),
                 checked = isLocationEnable,
                 onCheckedChange = { onGrantLocation() },
             )
+
+            // Exact alarm (Android 12+): needed for on-time prayer notifications
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(16.dp)
+                )
+                PermissionSwitch(
+                    title = stringResource(R.string.exact_alarm),
+                    description = stringResource(R.string.allow_exact_alarm_for_prayer_time),
+                    checked = isExactAlarmEnable,
+                    onCheckedChange = { onGrantExactAlarm() },
+                )
+            }
         }
     }
 }
@@ -155,7 +176,7 @@ private fun PermissionSwitch(
         CustomSwitch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            switchColor = Color(0xFF35A0F5),
+            switchColor = ColorBlue,
             disableBackgroundColor = Color.White.copy(alpha = 0.15f),
             thumbColor = Color.White,
         )

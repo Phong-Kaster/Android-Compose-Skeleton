@@ -14,8 +14,8 @@ import com.example.skeleton.core.CoreLayout
 import com.example.skeleton.ui.component.CoreBottomBar
 import com.example.skeleton.ui.component.CoreTopBar
 import com.example.skeleton.ui.fragment.home.component.HomeRequestPermission
-import com.example.skeleton.ui.fragment.home.component.isLocationGranted
 import com.example.skeleton.ui.fragment.home.component.isNotificationGranted
+import com.example.skeleton.ui.util.PermissionUtil.isLocationGranted
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : CoreFragment() {
@@ -54,14 +54,17 @@ class HomeFragment : CoreFragment() {
             uiState = viewModel.uiState.collectAsState().value,
         )
 
-        // Request camera permission & storage permission
+        // Request notification, location and exact alarm permissions
         HomeRequestPermission(
             enable = triggerRequestPermission,
             onNotificationGranted = {
-                // Handle notification granted
+                // Handle notification granted (e.g. refresh UI)
             },
             onLocationGranted = {
-                // Handle location granted
+                // Handle location granted (e.g. refresh location-based data)
+            },
+            onExactAlarmGranted = {
+                // Handle exact alarm granted (e.g. reschedule alarms)
             }
         )
     }
