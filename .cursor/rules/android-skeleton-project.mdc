@@ -26,6 +26,9 @@ For example: if you need Post API then create PostApi in `remote/api/PostApi` an
 For example: if need date and time extensions then create DateAndTimeExtension in `common/extensions`
 For example: if date and time needs complicated functions then create package as `common/extension/date_and_time` and separate 2 files include BasicDateAndTimeExtension and AdvancedDataAndTimeExtension
 
+- Do not hide lamda function. Always write full lamda functions. For example:
+val prevDone = prayerTimeStates.getOrElse(index = index - 1, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
+val thisDone = prayerTimeStates.getOrElse(index = index, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
 
 ## Tech Stack
 - **Language:** Kotlin
