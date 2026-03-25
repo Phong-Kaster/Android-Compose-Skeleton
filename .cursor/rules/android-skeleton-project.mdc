@@ -30,6 +30,11 @@ For example: if date and time needs complicated functions then create package as
 val prevDone = prayerTimeStates.getOrElse(index = index - 1, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
 val thisDone = prayerTimeStates.getOrElse(index = index, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
 
+- When update uiState, do not use syntax updatePlayer { copy(currentIndex = playlistIndex, playingVerseKey = key) }
+always use syntax _uiState.value = _uiState.value.copy(...)
+
+- If a project contains multiple rules, these rules must be given the highest priority
+
 ## Tech Stack
 - **Language:** Kotlin
 - **UI:** Jetpack Compose + Material3
