@@ -33,7 +33,9 @@ val thisDone = prayerTimeStates.getOrElse(index = index, defaultValue = { Prayer
 - When update uiState, do not use syntax updatePlayer { copy(currentIndex = playlistIndex, playingVerseKey = key) }
 always use syntax _uiState.value = _uiState.value.copy(...)
 
-- If a project contains multiple rules, these rules must be given the highest priority
+- When a project defines multiple rules, treat this "android-skeleton-project" rules as the highest priority and always enforce them.
+
+- If the codebase does not use Activity or Fragment, skip any rules related to Activity or Fragment.
 
 ## Tech Stack
 - **Language:** Kotlin
