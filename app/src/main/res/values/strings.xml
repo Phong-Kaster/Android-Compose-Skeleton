@@ -8,6 +8,8 @@
     <string name="japanese">Japanese</string>
     <string name="korean">Korean</string>
     <string name="home">Home</string>
+    <string name="home_refresh">Refresh</string>
+    <string name="home_no_posts">No posts yet. Pull to refresh or tap Refresh.</string>
     <string name="setting">Setting</string>
 
     <!-- Settings -->

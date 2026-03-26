@@ -13,7 +13,7 @@ class SettingViewModel(
     private val settingRepository: SettingRepository,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(SettingUiState())
+    private val _uiState = MutableStateFlow(SettingUiState())
     val uiState = _uiState.asStateFlow()
 
     val darkModeFlow = settingRepository.enableDarkModeFlow
@@ -32,7 +32,7 @@ class SettingViewModel(
 
     private fun observeLanguage() {
         viewModelScope.launch {
-            settingRepository. languageFlow.collectLatest { language ->
+            settingRepository.languageFlow.collectLatest { language ->
                 _uiState.value = _uiState.value.copy(selectedLanguage = language)
             }
         }
@@ -48,7 +48,7 @@ class SettingViewModel(
 
     fun changeLanguage(language: Language) {
         viewModelScope.launch {
-            _uiState.value = uiState.value.copy(selectedLanguage = language)
+            _uiState.value = _uiState.value.copy(selectedLanguage = language)
         }
     }
 }

@@ -23,8 +23,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            // JSONPlaceholder allows HTTP; avoids TLS trust failures on some emulators / inspected networks during dev.
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                "\"http://jsonplaceholder.typicode.com/\"",
+            )
+        }
         release {
             isMinifyEnabled = false
+            buildConfigField(
+                "String",
+                "API_BASE_URL",
+                "\"https://jsonplaceholder.typicode.com/\"",
+            )
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -32,6 +45,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -40,10 +54,12 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.android.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -91,6 +107,7 @@ dependencies {
     // Google Play in-app review - https://developer.android.com/guide/playcore/in-app-review/kotlin-java
     implementation(libs.google.play.review)
     implementation(libs.google.play.review.ktx)
+    implementation(libs.google.play.services.base)
 
     // Save data in a local database using Room - https://developer.android.com/training/data-storage/room#setup
     implementation(libs.room.runtime)

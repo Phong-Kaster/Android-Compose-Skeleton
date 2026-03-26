@@ -19,6 +19,8 @@ datastore = "1.2.0"
 navigationCompose = "2.9.6"
 lottieCompose = "6.7.1"
 google-play-review = "2.0.2"
+play-services-base = "18.7.0"
+desugar-jdk-libs = "2.1.4"
 roomCompiler = "2.7.2"
 roomKtx = "2.7.2"
 roomRuntime = "2.7.2"
@@ -71,6 +73,12 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 # google play review
 google-play-review = { group = "com.google.android.play", name = "review", version.ref = "google-play-review" }
 google-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "google-play-review" }
+
+# Google Play services — updated Conscrypt / TLS (ProviderInstaller); helps CertPathValidatorException on some devices
+google-play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "play-services-base" }
+
+# Core library desugaring (required by play-services-base 18.7+ with minSdk < 26)
+android-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
 # Room
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }

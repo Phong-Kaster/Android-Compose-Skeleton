@@ -9,7 +9,6 @@ import com.example.skeleton.domain.repository.UserActionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -30,7 +29,7 @@ class HomeViewModel(
     private fun observePosts() {
         viewModelScope.launch(Dispatchers.IO) {
             postRepository.observePosts().collect { posts ->
-                _uiState.update { it.copy(posts = posts, refreshError = null) }
+                _uiState.value = _uiState.value.copy(posts = posts, refreshError = null)
             }
         }
     }
@@ -38,13 +37,13 @@ class HomeViewModel(
     /** Fetches from API and saves to DB. Call on init or pull-to-refresh. */
     fun refreshPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isRefreshing = true, refreshError = null) }
+            _uiState.value = _uiState.value.copy(isRefreshing = true, refreshError = null)
             when (val result = postRepository.refreshPosts()) {
-                is Result.Success -> _uiState.update {
-                    it.copy(isRefreshing = false, refreshError = null)
+                is Result.Success -> {
+                    _uiState.value = _uiState.value.copy(isRefreshing = false, refreshError = null)
                 }
-                is Result.Error -> _uiState.update {
-                    it.copy(isRefreshing = false, refreshError = result.message)
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(isRefreshing = false, refreshError = result.message)
                 }
                 is Result.Loading -> { /* kept in isRefreshing */ }
             }
