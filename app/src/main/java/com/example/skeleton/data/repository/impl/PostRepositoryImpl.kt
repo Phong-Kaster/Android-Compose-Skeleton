@@ -1,6 +1,6 @@
 package com.example.skeleton.data.repository.impl
 
-import com.example.skeleton.common.Resource
+import com.example.skeleton.common.Result
 import com.example.skeleton.data.database.local.dao.PostDao
 import com.example.skeleton.data.mapper.toDomain
 import com.example.skeleton.data.mapper.toEntity
@@ -18,13 +18,13 @@ class PostRepositoryImpl(
     override fun observePosts(): Flow<List<Post>> =
         dao.observeAll().map { entities -> entities.map { it.toDomain() } }
 
-    override suspend fun refreshPosts(): Resource<Unit> {
+    override suspend fun refreshPosts(): Result<Unit> {
         return try {
             val posts = api.getPosts().map { it.toDomain() }
             dao.insertAll(posts.map { it.toEntity() })
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Unknown error", e)
+            Result.Error(e.message ?: "Unknown error", e)
         }
     }
 }
