@@ -34,3 +34,6 @@ google-services.json
 # Temporary files
 *.swp
 *.tmp
+
+# gradle
+.gradle/
