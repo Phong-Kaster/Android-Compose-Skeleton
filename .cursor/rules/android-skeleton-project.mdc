@@ -60,9 +60,12 @@ always use syntax _uiState.value = _uiState.value.copy(...)
 - Wrap API calls in **safeApiCallFlow**; expose **Resource&lt;T&gt;** (Loading/Success/Error). Map errors in UI with **Throwable.toUiMessage(context)** (UiErrorMapper).
 
 ## README MARKDOWN
-- Always add project structure to README.md and take note purpose of this package. For example, read project structure below and
-draw current project structure to README.md
 - Each time a new class, package is added, update README.md
+
+- Always add project structure to README.md and take note purpose of this package.
+For example, read project structure below and
+draw current project structure to README.md
+
 
 ├── CLAUDE.md                     # Master Claude instructions (auto-loaded every session)
 ├── PRD.md                        # Product Requirements Document — agents read, never modify
