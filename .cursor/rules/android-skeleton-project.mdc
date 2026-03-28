@@ -116,3 +116,15 @@ draw current project structure to README.md
     │   └── DECISIONS.md          # Architecture Decision Records (ADR log)
     └── content/
         └── CONTENT_STRATEGY.md   # Brand voice, keyword targets, copy library, technical SEO specs
+
+- Always display sub folder before display sibling .kt files. Read example below
+        ├── fragment/
+        │       │       │   ├── home/
+        │       │       │   │   └── component/
+        │       │       │   │       ├── HomePermissionBottomSheet.kt
+        │       │       │   │       └── HomeRequestPermission.kt
+        │       │       │   │   ├── HomeFragment.kt
+        │       │       │   │   ├── HomeUiState.kt
+        │       │       │   │   ├── HomeViewModel.kt
+
+        i mean i want to display sub component as └── component/ before i see ├── HomeFragment.kt

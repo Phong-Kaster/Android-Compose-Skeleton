@@ -44,65 +44,65 @@ The sample **Posts** flow uses [JSONPlaceholder](https://jsonplaceholder.typicod
 
 ## Project structure
 
+Tree order follows [`.cursor/rules/android-skeleton-project.mdc`](.cursor/rules/android-skeleton-project.mdc): **under each directory, list subfolders first, then sibling `.kt` files.** Layer purposes match the rule doc’s Clean Architecture section (`domain` / `data` / `core` / `common` / `ui` / `injection`). New shared extensions should go under `common` per rules; this repo still keeps existing shared extensions under `core/extension/`.
+
 ```
 Android-Compose-Skeleton/
 ├── .cursor/
 │   └── rules/
-│       └── android-skeleton-project.mdc   # Conventions & stack (highest-priority project rules)
+│       └── android-skeleton-project.mdc   # Conventions, stack, README tree rules
 ├── app/
 │   ├── build.gradle.kts
 │   └── src/main/
-│       ├── java/com/example/skeleton/     # Package root: com.example.skeleton
-│       │   ├── MainActivity.kt            # Hosts NavHostFragment via CoreActivity
-│       │   ├── MainApplication.kt         # Application + Koin start
-│       │   ├── common/                    # Constant, Language, Result, type aliases
+│       ├── java/com/example/skeleton/     # com.example.skeleton
+│       │   ├── common/                    # Shared types & constants (rules: prefer new extensions here)
 │       │   │   ├── Constant.kt
 │       │   │   ├── Language.kt
-│       │   │   ├── Result.kt
+│       │   │   ├── Result.kt              # Loading / Success / Error (rules API section names Resource<T>)
 │       │   │   └── Typealias.kt
-│       │   ├── core/                      # CoreActivity / Fragment / Layout, AppConfig, extensions
-│       │   │   ├── CoreActivity.kt
-│       │   │   ├── CoreFragment.kt
-│       │   │   ├── CoreLayout.kt
+│       │   ├── core/                      # config/, base screens, extension/ (legacy shared extensions)
 │       │   │   ├── config/
 │       │   │   │   └── AppConfig.kt
-│       │   │   └── extension/
-│       │   │       ├── collection/
-│       │   │       │   ├── AdvancedCollectionExtension.kt
-│       │   │       │   └── BasicCollectionExtension.kt
-│       │   │       ├── date_and_time/
-│       │   │       │   ├── DateExtension.kt
-│       │   │       │   └── LocalDateExtension.kt
-│       │   │       ├── flow/
-│       │   │       │   └── FlowExtension.kt
-│       │   │       ├── null_safety/
-│       │   │       │   ├── CollectionNullSafetyExtension.kt
-│       │   │       │   └── NullSafetyExtension.kt
-│       │   │       ├── number/
-│       │   │       │   ├── NumberFormattingExtension.kt
-│       │   │       │   └── RangeAndBoundaryExtensions.kt
-│       │   │       └── string_validation/
-│       │   │           ├── AdvancedStringValidationExtension.kt
-│       │   │           └── BasicStringValidationExtension.kt
-│       │   ├── data/                      # Remote, mappers, repository impls, Room, DataStore
+│       │   │   ├── extension/
+│       │   │   │   ├── collection/
+│       │   │   │   │   ├── AdvancedCollectionExtension.kt
+│       │   │   │   │   └── BasicCollectionExtension.kt
+│       │   │   │   ├── date_and_time/
+│       │   │   │   │   ├── DateExtension.kt
+│       │   │   │   │   └── LocalDateExtension.kt
+│       │   │   │   ├── flow/
+│       │   │   │   │   └── FlowExtension.kt
+│       │   │   │   ├── null_safety/
+│       │   │   │   │   ├── CollectionNullSafetyExtension.kt
+│       │   │   │   │   └── NullSafetyExtension.kt
+│       │   │   │   ├── number/
+│       │   │   │   │   ├── NumberFormattingExtension.kt
+│       │   │   │   │   └── RangeAndBoundaryExtensions.kt
+│       │   │   │   └── string_validation/
+│       │   │   │       ├── AdvancedStringValidationExtension.kt
+│       │   │   │       └── BasicStringValidationExtension.kt
+│       │   │   ├── CoreActivity.kt
+│       │   │   ├── CoreFragment.kt
+│       │   │   └── CoreLayout.kt
+│       │   ├── data/                      # remote/, mapper/, repository/impl/, database/, datastore/
 │       │   │   ├── database/local/
-│       │   │   │   ├── AppDatabase.kt
-│       │   │   │   ├── Migration.kt
 │       │   │   │   ├── converter/
 │       │   │   │   │   └── DateConverter.kt
 │       │   │   │   ├── dao/
 │       │   │   │   │   ├── PostDao.kt
 │       │   │   │   │   └── UserActionDao.kt
-│       │   │   │   └── entity/
-│       │   │   │       ├── PostEntity.kt
-│       │   │   │       └── UserActionEntity.kt
+│       │   │   │   ├── entity/
+│       │   │   │   │   ├── PostEntity.kt
+│       │   │   │   │   └── UserActionEntity.kt
+│       │   │   │   ├── AppDatabase.kt
+│       │   │   │   └── Migration.kt
 │       │   │   ├── datastore/
 │       │   │   │   └── SettingDatastore.kt
 │       │   │   ├── mapper/
 │       │   │   │   ├── PostMapper.kt
 │       │   │   │   └── UserActionMapper.kt
 │       │   │   ├── remote/
-│       │   │   │   ├── api/
+│       │   │   │   ├── api/               # ApiPath.kt, *Api (Ktor)
 │       │   │   │   │   ├── ApiPath.kt
 │       │   │   │   │   ├── PostApi.kt
 │       │   │   │   │   └── WeatherApi.kt
@@ -114,7 +114,7 @@ Android-Compose-Skeleton/
 │       │   │       ├── PostRepositoryImpl.kt
 │       │   │       ├── SettingRepositoryImpl.kt
 │       │   │       └── UserActionRepositoryImpl.kt
-│       │   ├── domain/                    # Models, repository interfaces, enums (no Android/data deps)
+│       │   ├── domain/                    # model/, repository/ (interfaces), enums/ — no Android/data
 │       │   │   ├── enums/
 │       │   │   │   └── BottomBarDestination.kt
 │       │   │   ├── model/
@@ -124,7 +124,7 @@ Android-Compose-Skeleton/
 │       │   │       ├── PostRepository.kt
 │       │   │       ├── SettingRepository.kt
 │       │   │       └── UserActionRepository.kt
-│       │   ├── injection/               # Koin modules
+│       │   ├── injection/                 # Koin: AppModule aggregates db, datastore, repo, VM, network, locale
 │       │   │   ├── AppModule.kt
 │       │   │   ├── DatabaseModule.kt
 │       │   │   ├── DatastoreModule.kt
@@ -132,51 +132,53 @@ Android-Compose-Skeleton/
 │       │   │   ├── NetworkModule.kt
 │       │   │   ├── RepositoryModule.kt
 │       │   │   └── ViewModelModule.kt
-│       │   └── ui/                      # Fragments, ViewModels, Compose, theme, util
-│       │       ├── component/
-│       │       │   ├── CoreBottomBar.kt
-│       │       │   ├── CoreBottomSheet.kt
-│       │       │   ├── CoreTopBar.kt
-│       │       │   ├── CoreTopBar4.kt
-│       │       │   ├── LifecycleComposable.kt
-│       │       │   └── ratebottomsheet/
-│       │       │       ├── RateBottomSheet.kt
-│       │       │       └── RateOption.kt
-│       │       ├── fragment/
-│       │       │   ├── home/
-│       │       │   │   ├── HomeFragment.kt
-│       │       │   │   ├── HomeUiState.kt
-│       │       │   │   ├── HomeViewModel.kt
-│       │       │   │   └── component/
-│       │       │   │       ├── HomePermissionBottomSheet.kt
-│       │       │   │       └── HomeRequestPermission.kt
-│       │       │   └── setting/
-│       │       │       ├── SettingFragment.kt
-│       │       │       ├── SettingUiState.kt
-│       │       │       ├── SettingViewModel.kt
-│       │       │       ├── component/
-│       │       │       │   └── SettingItem.kt
-│       │       │       └── language/
-│       │       │           ├── SettingLanguageFragment.kt
-│       │       │           └── component/
-│       │       │               └── LanguageItem.kt
-│       │       ├── modifier/
-│       │       │   └── Shadow.kt
-│       │       ├── theme/
-│       │       │   ├── Color.kt
-│       │       │   ├── Theme.kt
-│       │       │   └── Type.kt
-│       │       └── util/
-│       │           ├── AppUtil.kt
-│       │           ├── LocaleManager.kt
-│       │           ├── LogUtil.kt
-│       │           ├── NavigationUtil.kt
-│       │           ├── NetworkUtil.kt
-│       │           ├── PermissionUtil.kt
-│       │           ├── RateUtil.kt
-│       │           ├── SystemBarUtil.kt
-│       │           └── error/
-│       │               └── UiErrorMapper.kt
+│       │   ├── ui/                        # fragment/, component/, theme/, modifier/, util/ (UiErrorMapper)
+│       │   │   ├── component/
+│       │   │   │   ├── ratebottomsheet/
+│       │   │   │   │   ├── RateBottomSheet.kt
+│       │   │   │   │   └── RateOption.kt
+│       │   │   │   ├── CoreBottomBar.kt
+│       │   │   │   ├── CoreBottomSheet.kt
+│       │   │   │   ├── CoreTopBar.kt
+│       │   │   │   ├── CoreTopBar4.kt
+│       │   │   │   └── LifecycleComposable.kt
+│       │   │   ├── fragment/
+│       │   │   │   ├── home/
+│       │   │   │   │   ├── component/
+│       │   │   │   │   │   ├── HomePermissionBottomSheet.kt
+│       │   │   │   │   │   └── HomeRequestPermission.kt
+│       │   │   │   │   ├── HomeFragment.kt
+│       │   │   │   │   ├── HomeUiState.kt
+│       │   │   │   │   └── HomeViewModel.kt
+│       │   │   │   └── setting/
+│       │   │   │       ├── component/
+│       │   │   │       │   └── SettingItem.kt
+│       │   │   │       ├── language/
+│       │   │   │       │   ├── component/
+│       │   │   │       │   │   └── LanguageItem.kt
+│       │   │   │       │   └── SettingLanguageFragment.kt
+│       │   │   │       ├── SettingFragment.kt
+│       │   │   │       ├── SettingUiState.kt
+│       │   │   │       └── SettingViewModel.kt
+│       │   │   ├── modifier/
+│       │   │   │   └── Shadow.kt
+│       │   │   ├── theme/
+│       │   │   │   ├── Color.kt
+│       │   │   │   ├── Theme.kt
+│       │   │   │   └── Type.kt
+│       │   │   └── util/
+│       │   │       ├── error/
+│       │   │       │   └── UiErrorMapper.kt
+│       │   │       ├── AppUtil.kt
+│       │   │       ├── LocaleManager.kt
+│       │   │       ├── LogUtil.kt
+│       │   │       ├── NavigationUtil.kt
+│       │   │       ├── NetworkUtil.kt
+│       │   │       ├── PermissionUtil.kt
+│       │   │       ├── RateUtil.kt
+│       │   │       └── SystemBarUtil.kt
+│       │   ├── MainActivity.kt
+│       │   └── MainApplication.kt
 │       └── res/                           # Layouts, navigation graph, themes, strings
 ├── gradle/
 │   ├── libs.versions.toml                 # Version catalog
