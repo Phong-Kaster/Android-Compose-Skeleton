@@ -1,5 +1,5 @@
 ---
-description: Android skeleton project — tech stack, Clean Architecture, and conventions
+description: Android skeleton project — tech stack, Clean Architecture, and conventions by Phong-Kaster
 alwaysApply: true
 ---
 
@@ -22,9 +22,9 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 * @param B do something
 * @author Phong-Kaster
 */
-- Write document or inline document like you are explaining for a kid like "I am human & i need to understand your code"
+- Write document or inline document like you are explaining for a kid like "I am just a kid & i need to understand your code"
 - Always add README.md to explain overall the purpose of the app & what features the app does
-- Always add a project package tree in README.md
+- Always add a project package tree in README.md (see **README & package tree** below)
 
 ## Naming & Style
 - Repository interfaces: `XxxRepository`. Implementations: `XxxRepositoryImpl` in `data/repository/impl/`.
@@ -42,9 +42,11 @@ val prevDone = prayerTimeStates.getOrElse(index = index - 1, defaultValue = { Pr
 val thisDone = prayerTimeStates.getOrElse(index = index, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
 
 - When update uiState, do not use syntax updatePlayer { copy(currentIndex = playlistIndex, playingVerseKey = key) }
-always use syntax _uiState.value = _uiState.value.copy(...)
+- Do not use `MutableStateFlow.update { … }` or `_uiState.update { it.copy(…) }` for screen UI state in this project.
+- Always use syntax: `_uiState.value = _uiState.value.copy(...)`
 
 - When a project defines multiple rules, treat this "android-skeleton-project" rules as the highest priority and always enforce them.
+- If another rule conflicts with this file, follow **this** file and mention the conflict in your summary or PR description.
 
 - If the codebase does not use Activity or Fragment, allow skipping any rules related to Activity or Fragment.
 
@@ -71,72 +73,39 @@ always use syntax _uiState.value = _uiState.value.copy(...)
 - New API: add *Api in `data/remote/api/`, DTO in `data/remote/dto/`, mapper in `data/mapper/`, repository interface in `domain/repository/`, impl in `data/repository/impl/`, bind in NetworkModule + RepositoryModule.
 - Wrap API calls in **safeApiCallFlow**; expose **Resource&lt;T&gt;** (Loading/Success/Error). Map errors in UI with **Throwable.toUiMessage(context)** (UiErrorMapper).
 
-## README MARKDOWN
-- Each time a new class, package is added, update README.md
+## README & package tree
+- **README.md** must describe app purpose, features, tech stack, and include a **package tree** for `app/src/main/java/com/example/skeleton/` (or the current app package).
+- **When to update README** in the same change (do not defer):
+  - You add, remove, or rename a **top-level package** or **meaningful subpackage** under the app source root.
+  - You change **architecture** or **layer responsibilities** described in README.
+  - You edit **this rule file** (`android-skeleton-project.mdc`) in a way that changes what README is supposed to contain—**sync README** in that same task.
+- For each major folder in the tree, add a **short note** (purpose of that package), not only file names.
 
-- Always add project structure to README.md and take note purpose of this package.
-For example, read project structure below and
-draw current project structure to README.md
+### Tree drawing order (important)
+- Under any folder, list **subfolders first** (deepest paths expanded), **then** `.kt` (or sibling files) at that folder level.
+- So for `ui/fragment/home/`, show `component/` (and its files) **before** `HomeFragment.kt`, `HomeUiState.kt`, `HomeViewModel.kt` at the `home/` level.
 
+**Correct pattern (conceptual):**
+```
+ui/fragment/home/
+├── component/
+│   ├── HomePermissionBottomSheet.kt
+│   └── HomeRequestPermission.kt
+├── HomeFragment.kt
+├── HomeUiState.kt
+└── HomeViewModel.kt
+```
 
-├── CLAUDE.md                     # Master Claude instructions (auto-loaded every session)
-├── PRD.md                        # Product Requirements Document — agents read, never modify
-├── TODO.md                       # Prioritized backlog — humans curate, agents consult
-├── README.template.md            # README template filled in during onboarding
-├── START_HERE.md                 # Onboarding protocol — deleted after setup
-├── .gitignore
-│
-├── .claude/
-│   ├── agents/                   # Specialist sub-agents
-│   │   ├── project-manager.md    # Backlog governance & agent coordination
-│   │   ├── systems-architect.md  # Architecture decisions & ADRs (Claude Opus)
-│   │   ├── frontend-developer.md # UI components & pages
-│   │   ├── backend-developer.md  # API endpoints & business logic
-│   │   ├── ui-ux-designer.md     # UX flows & design system specs
-│   │   ├── database-expert.md    # Schema design & migrations
-│   │   ├── qa-engineer.md        # Playwright E2E tests
-│   │   ├── documentation-writer.md # User guide & project docs
-│   │   ├── cicd-engineer.md      # GitHub Actions workflows & deployment pipelines
-│   │   ├── docker-expert.md      # Dockerfiles, Compose, image optimization
-│   │   └── copywriter-seo.md     # Conversion copy, brand voice, keyword strategy, technical SEO
-│   ├── commands/
-│   │   ├── start.md              # /start — runs the onboarding protocol
-│   │   └── sync-template.md      # /sync-template — pulls latest .claude/ from upstream
-│   └── templates/                # Blank doc templates — synced from upstream via /sync-template
-│       ├── CLAUDE.md             # Master Claude instructions template
-│       ├── PRD.md                # Product requirements template
-│       ├── README.md             # Project README template
-│       ├── docs/
-│       │   ├── technical/        # ARCHITECTURE.md, DECISIONS.md, API.md, DATABASE.md
-│       │   ├── user/             # USER_GUIDE.md
-│       │   └── content/          # CONTENT_STRATEGY.md
-│       └── .tasks/
-│           └── TASK_TEMPLATE.md  # Task file template
-│
-├── .github/
-│   └── PULL_REQUEST_TEMPLATE.md  # Enforces consistent PR descriptions
-│
-├── .tasks/                       # Detailed task files — one per TODO item
-│   └── TASK_TEMPLATE.md          # Copy this when creating new tasks
-│
-└── docs/                         # Created during onboarding from .claude/templates/
-    ├── user/USER_GUIDE.md        # How the system is used (user perspective)
-    ├── technical/
-    │   ├── ARCHITECTURE.md       # System design & component overview
-    │   ├── API.md                # API reference (updated after every endpoint)
-    │   ├── DATABASE.md           # Schema, migrations, query patterns
-    │   └── DECISIONS.md          # Architecture Decision Records (ADR log)
-    └── content/
-        └── CONTENT_STRATEGY.md   # Brand voice, keyword targets, copy library, technical SEO specs
+**Avoid:** listing `HomeFragment.kt` before `component/` when `component/` is a child of `home/`.
 
-- Always display sub folder before display sibling .kt files. Read example below
-        ├── fragment/
-        │       │       │   ├── home/
-        │       │       │   │   └── component/
-        │       │       │   │       ├── HomePermissionBottomSheet.kt
-        │       │       │   │       └── HomeRequestPermission.kt
-        │       │       │   │   ├── HomeFragment.kt
-        │       │       │   │   ├── HomeUiState.kt
-        │       │       │   │   ├── HomeViewModel.kt
+## TLS / networking (when users report certificate errors)
+- This app may use **BuildConfig**-based **debug vs release** base URLs and **network_security_config.xml** (e.g. cleartext limited to specific hosts in debug). Do not suggest disabling TLS verification globally for production.
+- For `CertPathValidatorException`, consider build type, `network_security_config`, and environment (proxy, VPN, corporate inspection) before changing code.
 
-        i mean i want to display sub component as └── component/ before i see ├── HomeFragment.kt
+## Agent checklist (before finishing a structural task)
+- [ ] If packages or layers changed: **README package tree** and package-purpose notes are updated.
+- [ ] If this `.mdc` file changed: **README** still matches new documentation rules.
+- [ ] New remote feature: **ApiPath**, DTO, mapper, repository + **NetworkModule** / **RepositoryModule** (and **ViewModelModule** if needed).
+- [ ] ViewModels: screen state uses `_uiState.value = _uiState.value.copy(...)` only.
+
+## @author Phong-Kaster
