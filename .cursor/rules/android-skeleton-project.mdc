@@ -8,12 +8,23 @@ alwaysApply: true
 ## Purpose
 This is a **reusable skeleton app**. Code and structure should stay easy to copy into new projects. Prefer clear layers and config over one-off hacks.
 
-## Core rules
-- Always write code that can be easier expandable
-- Always write code that can be easier reused from a project to other projects
+## Core rules / Spirit of Cursor
+- Always write code that can be easier expandable, respect Android official document recommendation
+- Always write code that can be easier recycled from a project to other projects
 - Prefer write code that easier to understand for human than write code that has high performance
+
+## Document
 - Always add document and write example for each class or functions even if it's just writing a short paragraph. Higher priority to complex functions and related logic
-- Leverage utilize use-case to carry out a complex action that needs time to compute then base on the result to decide. Naming use-case must represent purpose, for example: CreateOngoingUseCase, CreateDailyNotificationUseCase
+- Always add @author Phong-Kaster at the end of document. For example
+/**
+* The purpose of this class is ....
+* @param A do something
+* @param B do something
+* @author Phong-Kaster
+*/
+- Write document or inline document like you are explaining for a kid like "I am human & i need to understand your code"
+- Always add README.md to explain overall the purpose of the app & what features the app does
+- Always add a project package tree in README.md
 
 ## Naming & Style
 - Repository interfaces: `XxxRepository`. Implementations: `XxxRepositoryImpl` in `data/repository/impl/`.
@@ -35,16 +46,17 @@ always use syntax _uiState.value = _uiState.value.copy(...)
 
 - When a project defines multiple rules, treat this "android-skeleton-project" rules as the highest priority and always enforce them.
 
-- If the codebase does not use Activity or Fragment, skip any rules related to Activity or Fragment.
+- If the codebase does not use Activity or Fragment, allow skipping any rules related to Activity or Fragment.
 
 ## Tech Stack
 - **Language:** Kotlin
 - **UI:** Jetpack Compose + Material3
-- **DI:** Koin
+- **DI:** Koin or Hilt
 - **Navigation:** Navigation Component (Fragment-based, Compose inside fragments)
-- **Network:** Ktor client
+- **Network:** Ktor client or Retrofit
 - **Local:** Room, DataStore
 - **Config:** `core.config.AppConfig` (API base URL, timeouts); `common.Constant` (app URLs, datastore name)
+- Leverage utilize use-case to carry out a complex action that needs time to compute then base on the result to decide. Naming use-case must represent purpose, for example: CreateOngoingUseCase, CreateDailyNotificationUseCase
 
 ## Clean Architecture — Package Layout
 - **domain/** — `model/`, `repository/` (interfaces only). No Android or data dependencies.
