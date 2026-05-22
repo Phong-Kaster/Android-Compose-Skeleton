@@ -113,6 +113,83 @@ Conventions:
 
 ---
 
+## Data-source anatomy
+
+### DataStore class
+
+Create one `FooDatastore` per concern in `data/datastore/`. It owns the `Preferences` key names and exposes typed Flows and suspend writers:
+
+```kotlin
+class FooDatastore(private val context: Context) {
+
+    private val dataStore = context.dataStore  // delegate created via Context.createDataStore or PreferenceDataStoreFactory
+
+    val itemFlow: Flow<String> = dataStore.data
+        .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
+        .map { prefs -> prefs[KEY_ITEM] ?: "" }
+
+    suspend fun setItem(value: String) {
+        dataStore.edit { prefs -> prefs[KEY_ITEM] = value }
+    }
+
+    companion object {
+        private val KEY_ITEM = stringPreferencesKey("key_item")
+    }
+}
+```
+
+- One DataStore instance per file (one file = one DataStore delegate in `common/` or `injection/`).
+- Key names are `private` constants in the companion — never exposed outside the class.
+- `.catch { IOException → emptyPreferences() }` on every Flow so cold-start read errors don't crash collectors.
+- Writers are `suspend` — call from `viewModelScope.launch(Dispatchers.IO)` in the ViewModel.
+
+---
+
+### Room DAO + Entity
+
+One `@Dao` interface and one `@Entity` data class per table, both in `data/database/`:
+
+```kotlin
+// Entity
+@Entity(tableName = "foo")
+data class FooEntity(
+    @PrimaryKey val id: Long,
+    val name: String,
+    val createdAt: Long,
+)
+
+// DAO
+@Dao
+interface FooDao {
+
+    @Query("SELECT * FROM foo WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): FooEntity?
+
+    @Query("SELECT * FROM foo ORDER BY createdAt DESC")
+    fun observeAll(): Flow<List<FooEntity>>
+
+    @Query("SELECT COUNT(*) FROM foo")
+    suspend fun rowCount(): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(entity: FooEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<FooEntity>)
+
+    @Delete
+    suspend fun delete(entity: FooEntity)
+}
+```
+
+Conventions:
+- `observeAll()` returns `Flow<List<FooEntity>>` (no `suspend`) — Room manages the emission.
+- `rowCount()` is needed for seed-guard checks (Recipe E).
+- Mapper extension functions (`FooEntity.toDomain()`, `Foo.toEntity()`) live in `data/mapper/FooMapper.kt` — the repository never maps inline.
+- Register every `@Entity` in the `@Database` class in `data/database/AppDatabase.kt`.
+
+---
+
 ## Data-source recipes
 
 Pick the recipe that matches your data source. Mix multiple sources in one repository when the domain calls for it.

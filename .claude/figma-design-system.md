@@ -110,12 +110,14 @@ The repo intentionally mixes two color sources. Don't try to "clean this up" —
 
 **(a) Named semantic tokens** in `ui/theme/Color.kt`:
 
-| Token | Meaning |
-|---|---|
-| `ColorTextPrimary` (#091222) | Body / primary text on light surfaces |
-| `ColorTextSecond` (#2F70BC) | Brand blue used in headers, icons-on-light |
-| `ColorBorderSubtle` (#E6E7E9) | Card borders and dividers |
-| `ColorIconMuted` (#9CA3AF) | Muted chevrons / secondary icons |
+> **New project:** Replace the hex values below with your brand palette. Keep the semantic names — they are referenced across rule files and composables.
+
+| Token | Meaning | Skeleton default |
+|---|---|---|
+| `ColorTextPrimary` | Body / primary text on light surfaces | #091222 |
+| `ColorTextSecond` | Brand blue used in headers, icons-on-light | #2F70BC |
+| `ColorBorderSubtle` | Card borders and dividers | #E6E7E9 |
+| `ColorIconMuted` | Muted chevrons / secondary icons | #9CA3AF |
 
 **(b) Inline `Color(0xFF...)`** for one-off literals from a specific Figma node:
 
