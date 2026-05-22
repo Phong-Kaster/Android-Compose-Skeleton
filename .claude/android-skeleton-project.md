@@ -47,8 +47,8 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 
 - Do not hide lambda functions. Always write the full lambda:
   ```kotlin
-  val prevDone = prayerTimeStates.getOrElse(index = index - 1, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
-  val thisDone = prayerTimeStates.getOrElse(index = index, defaultValue = { PrayerItemState.Rest }) == PrayerItemState.Done
+  val prevActive = itemStates.getOrElse(index = index - 1, defaultValue = { XxxItemState.Inactive }) == XxxItemState.Active
+  val thisActive = itemStates.getOrElse(index = index, defaultValue = { XxxItemState.Inactive }) == XxxItemState.Active
   ```
 
 - Do not use `MutableStateFlow.update { … }` or `_uiState.update { it.copy(…) }` for screen UI state. Always use:
@@ -77,7 +77,7 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 
 - **domain/** — `model/`, `repository/` (interfaces only). No Android or data dependencies.
 - **data/** — `remote/api/` (ApiPath, *Api classes), `remote/dto/`, `remote/util/` (e.g. `safeApiCallFlow`), `mapper/`, `repository/impl/`.
-- **core/** — `config/` (AppConfig), base classes (`CoreActivity`, `CoreFragment`, `CoreLayout`).
+- **core/** — `config/` (AppConfig), base classes (`CoreActivity`, `CoreFragment`, `CoreLayout`). These are skeleton-provided — do not recreate them. `CoreFragment` owns the `ComposeView()` entry point; `CoreLayout` wraps `Scaffold` with edge-to-edge insets; `safeNavigate` is a `NavigationUtil` helper on `CoreFragment`.
 - **common/** — Shared types and constants: `Outcome<T>` (custom sealed class below), `Constant`, `Language`, extensions (e.g. validation).
 
 ```kotlin
@@ -89,7 +89,7 @@ sealed class Outcome<out T> {
 }
 ```
 
-- **ui/** — Fragments, ViewModels, components, theme, util (e.g. `UiErrorMapper`).
+- **ui/** — Fragments, ViewModels, components, theme, util (e.g. `UiErrorMapper`). `customizedTextStyle(fontSize, fontWeight, lineHeight, color)` lives in `ui/theme/Type.kt` — use it for every `Text`; never use `MaterialTheme.typography`.
 - **injection/** — Koin modules (`appModule` includes database, datastore, repository, viewModel, network, locale).
 
 ---

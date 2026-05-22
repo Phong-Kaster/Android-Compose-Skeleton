@@ -4,6 +4,12 @@
 > This file defines how screens are built in this project. Generated Compose code MUST blend into the existing codebase — same shape, same readability, same trade-offs.
 >
 > Rule of thumb: if a new file does not look like a sibling of the existing fragments after a glance, it is wrong — fix the shape before adding behavior.
+>
+> **Skeleton-provided primitives** (do not recreate, just use):
+> - `CoreFragment` — base fragment with `ComposeView()` entry point and `safeNavigate(...)`.
+> - `CoreLayout` — opinionated `Scaffold` wrapper with edge-to-edge insets. Use instead of raw `Scaffold`.
+> - `CoreTopBar` / `CoreBottomBar` — pre-styled top/bottom bars with dynamic status-bar padding.
+> - `customizedTextStyle(fontSize, fontWeight, lineHeight, color)` — house text style helper in `ui/theme/Type.kt`. Use instead of `MaterialTheme.typography`.
 
 ---
 
@@ -29,9 +35,9 @@ override fun ComposeView() {
     )
 
     // Overlays / bottom sheets / permission requests live HERE, after the Layout call.
-    RequestMandatoryPermissions(...)
-    RateBottomSheet(...)
-    HomeLoadingDialog(enabled = ...)
+    XxxPermissionRequest(...)
+    XxxBottomSheet(...)
+    XxxLoadingDialog(enabled = ...)
 }
 ```
 
@@ -79,7 +85,7 @@ Notes:
 
 ```kotlin
 Text(
-    text = stringResource(R.string.today_s_hadith),
+    text = stringResource(R.string.section_title),
     style = customizedTextStyle(
         fontSize = 16,
         fontWeight = 600,
@@ -120,7 +126,7 @@ tint = Color(0xFF2F70BC)
 
 Rule of thumb: **use a token if the color appears in 3+ places**. Otherwise inline the hex. Pre-declaring every color as a `val` at the top of a composable is explicitly discouraged.
 
-Do not add semantic tokens for one-off brand asset colors (e.g. the golden gradient in `NoPremiumAccess`). Keep those inline.
+Do not add semantic tokens for one-off brand asset colors (e.g. a golden gradient in a paywall illustration). Keep those inline.
 
 ---
 
@@ -239,7 +245,7 @@ if (latestItem == null) {
 
 ## 11. Lists
 
-- `LazyColumn` items each get a descriptive `key = "Name"` — use readable names like `"HomeTopBarAdvance"`, `"HomeMore"`, not `"item1"`. Future debugging relies on these names.
+- `LazyColumn` items each get a descriptive `key = "Name"` — use readable names like `"XxxTopBar"`, `"XxxItemCard"`, not `"item1"`. Future debugging relies on these names.
 - `verticalArrangement = Arrangement.spacedBy(20.dp)` at the LazyColumn level handles inter-item gaps; each item then applies its own `horizontal = 16.dp` padding.
 - `LazyRow` for horizontal icon strips — same `item(key = "...")` pattern.
 
@@ -252,9 +258,9 @@ Overlays are NOT children of `XxxLayout`. They live at the same level in `Compos
 ```kotlin
 XxxLayout(uiState = ..., onAction = ...)
 
-RequestMandatoryPermissions(visible = ..., ...)
-HomeLoadingDialog(enabled = ...)
-RateBottomSheet(enabled = ..., onDismiss = ..., onSubmit = ...)
+XxxPermissionRequest(visible = ..., ...)
+XxxLoadingDialog(enabled = ...)
+XxxBottomSheet(enabled = ..., onDismiss = ..., onSubmit = ...)
 ```
 
 This keeps `XxxLayout` previewable with no fake permission state. Use an `ActionPopup` enum inside the Fragment when overlays are mutually exclusive so only one shows at a time.
@@ -327,14 +333,14 @@ private fun HomeLayout() {
     CoreLayout(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            HomeBottomBar(
+            XxxBottomBar(
                 action1 = {},
                 action2 = {},
                 action3 = {},
             )
         },
         topBar = {
-            HomeTopBar(
+            XxxTopBar(
                 action1 = {},
                 action2 = {},
                 action3 = {},
