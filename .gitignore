@@ -35,5 +35,8 @@ google-services.json
 *.swp
 *.tmp
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # gradle
 .gradle/
