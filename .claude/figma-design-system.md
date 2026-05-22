@@ -1,9 +1,9 @@
-# Figma → Compose (this repo)
+# Figma → Compose
 > Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (highest priority) and `compose-fragment-preview.md`.
 >
-> This file is the **lived practice** of the project: how screens are actually built across `HomeFragment`, `CompassFragment`, `PrayerFragment`, `QuranFragment`, `SettingFragment`, the "of the day" cards (`HadithOfTheDayCard`, `DuasOfTheDayCard`), and the `HomeMore` row. Generated Compose code MUST blend into this codebase — same shape, same readability, same trade-offs.
+> This file defines how screens are built in this project. Generated Compose code MUST blend into the existing codebase — same shape, same readability, same trade-offs.
 >
-> Rule of thumb: if a new file does not look like a sibling of `HadithOfTheDayCard.kt` or `HomeFragment.kt` after a glance, it is wrong — fix the shape before adding behavior.
+> Rule of thumb: if a new file does not look like a sibling of the existing fragments after a glance, it is wrong — fix the shape before adding behavior.
 
 ---
 
@@ -11,8 +11,8 @@
 
 Every screen has **exactly two composable layers**:
 
-- `XxxFragment : CoreFragment()` — owns the ViewModel, lifecycle, navigation, logging, permissions.
-- `private fun XxxLayout(uiState, lambdas...)` — pure UI. No Koin, no `LocalNavController`, no `logEvent`, no `safeNavigate`. Just renders state and forwards events.
+- `XxxFragment : CoreFragment()` — owns the ViewModel, lifecycle, navigation, permissions.
+- `private fun XxxLayout(uiState, lambdas...)` — pure UI. No Koin, no `LocalNavController`, no `safeNavigate`. Just renders state and forwards events.
 
 `ComposeView()` inside the fragment is the wiring spot — it collects state, picks the side-effect popups, and calls the Layout once:
 
@@ -25,7 +25,7 @@ override fun ComposeView() {
     XxxLayout(
         uiState = uiState,
         onOpenSetting = { safeNavigate(R.id.toSetting) },
-        onPrayerCheckChanged = { type, done -> viewModel.setPrayerDoneForToday(type, done) },
+        onItemSelected = { item -> viewModel.selectItem(item) },
     )
 
     // Overlays / bottom sheets / permission requests live HERE, after the Layout call.
@@ -35,17 +35,17 @@ override fun ComposeView() {
 }
 ```
 
-Do not put `safeNavigate`, `logEvent`, `Toast`, or `requireContext()` inside `XxxLayout`. The Layout must be previewable with `XxxLayout(uiState = XxxUiState(...))` — nothing else.
+Do not put `safeNavigate`, `Toast`, or `requireContext()` inside `XxxLayout`. The Layout must be previewable with `XxxLayout(uiState = XxxUiState(...))` — nothing else.
 
 **Lambda defaults are mandatory.** Every callback in `XxxLayout(...)` ends with `= {}` so previews work with zero boilerplate:
 
 ```kotlin
 @Composable
-private fun HomeLayout(
-    uiState: HomeUiState,
+private fun XxxLayout(
+    uiState: XxxUiState,
     onOpenSetting: () -> Unit = {},
-    onPrayerCheckChanged: (PrayerTimeType, Boolean) -> Unit = { _, _ -> },
-    onOpenDuas: () -> Unit = {},
+    onItemSelected: (XxxModel) -> Unit = {},
+    onOpenDetail: () -> Unit = {},
 )
 ```
 
@@ -67,9 +67,9 @@ CoreLayout(
 Notes:
 
 - `CoreTopBar` already handles `dynamicStatusBarPadding()`. Do not wrap it in another `Spacer` for status bar.
-- Top-level screens (`Home`, `Compass`, `Prayer`, `Quran`) use `CoreBottomBar()` directly; secondary screens (`Setting`) typically omit it.
-- Loading state at screen level → `CoreLayout(showLoading = true, ...)`. Custom overlays (e.g. `HomeLoadingDialog` with Lottie) live in the fragment, not inside `CoreLayout`.
-- For a screen with an image background (see `QuranLayout`), wrap `CoreLayout` in a `Box` and paint the background behind it.
+- Top-level screens (main navigation tabs) use `CoreBottomBar()` directly; secondary screens typically omit it.
+- Loading state at screen level → `CoreLayout(showLoading = true, ...)`. Custom overlays (e.g. a Lottie loading dialog) live in the fragment, not inside `CoreLayout`.
+- For a screen with an image background, wrap `CoreLayout` in a `Box` and paint the background behind it.
 
 ---
 
@@ -110,7 +110,6 @@ The repo intentionally mixes two color sources. Don't try to "clean this up" —
 | `ColorTextSecond` (#2F70BC) | Brand blue used in headers, icons-on-light |
 | `ColorBorderSubtle` (#E6E7E9) | Card borders and dividers |
 | `ColorIconMuted` (#9CA3AF) | Muted chevrons / secondary icons |
-| `ColorAyatReaderDecorFill` | Soft circle behind ayat |
 
 **(b) Inline `Color(0xFF...)`** for one-off literals from a specific Figma node:
 
@@ -185,10 +184,10 @@ Most clicks go through the full call so screen-reader labels and ripple shape ar
 
 ```kotlin
 .clickable(
-    onClickLabel = stringResource(R.string.today_s_hadith),
+    onClickLabel = stringResource(R.string.action_label),
     interactionSource = remember { MutableInteractionSource() },
     indication = ripple(bounded = true),
-    onClick = onOpenHadithOfTheDay,
+    onClick = onOpenDetail,
 )
 ```
 
@@ -202,9 +201,8 @@ When a child inside a clickable container needs its own click, use `indication =
 - **Card inner padding**: `16.dp`.
 - **Vertical rhythm inside a card**: `12.dp` between major sections, `8.dp` between tight related lines.
 - **Vertical rhythm between list items**: `Arrangement.spacedBy(20.dp)` for home-feed style, `16.dp` for tighter lists.
-- **Horizontal item spacing in rows**: `8.dp` for icon+text, `12.dp` for tiles side-by-side, `16.dp` for the `HomeMore` icon row.
+- **Horizontal item spacing in rows**: `8.dp` for icon+text, `12.dp` for tiles side-by-side, `16.dp` for wider icon rows.
 - Prefer `Arrangement.spacedBy(N.dp)` over manual `Spacer(Modifier.height(N.dp))` inside Columns/Rows.
-- Do not introduce `AppUtil.figmaScaleWidth/Height` in new files — only retain where it already exists.
 
 ---
 
@@ -224,14 +222,14 @@ When a child inside a clickable container needs its own click, use `indication =
 - For nullable card data ("of the day" pattern), capture with `rememberUpdatedState`, then branch:
 
 ```kotlin
-val latestHadith by rememberUpdatedState(hadith)
-val shareEnabled = latestHadith != null
+val latestItem by rememberUpdatedState(item)
+val shareEnabled = latestItem != null
 val shareColor = if (shareEnabled) ColorTextPrimary else ColorTextPrimary.copy(alpha = 0.38f)
 
-if (latestHadith == null) {
-    Text(text = stringResource(R.string.hadith_none_available), ...)
+if (latestItem == null) {
+    Text(text = stringResource(R.string.empty_state_message), ...)
 } else {
-    val detail = latestHadith!!  // safe inside the else after rememberUpdatedState
+    val detail = latestItem!!  // safe inside the else after rememberUpdatedState
 }
 ```
 
@@ -259,26 +257,24 @@ HomeLoadingDialog(enabled = ...)
 RateBottomSheet(enabled = ..., onDismiss = ..., onSubmit = ...)
 ```
 
-This keeps `XxxLayout` previewable with no fake permission state. Use `actionPopup` enum patterns when overlays are mutually exclusive (see `HomeFragment.ActionPopup`) so only one shows at a time.
+This keeps `XxxLayout` previewable with no fake permission state. Use an `ActionPopup` enum inside the Fragment when overlays are mutually exclusive so only one shows at a time.
 
 ---
 
-## 13. Logging & navigation (fragment-side only)
+## 13. Navigation (fragment-side only)
 
-Inside the lambdas passed to `XxxLayout`, the Fragment does the logging and the navigation:
+Inside the lambdas passed to `XxxLayout`, the Fragment handles navigation:
 
 ```kotlin
-onOpenDuas = {
-    logEvent("home_scr_duas_click")
-    safeNavigate(R.id.toDuas)
+onOpenSomething = {
+    safeNavigate(R.id.toSomething)
 },
 ```
 
-- `logEvent("<screen>_scr_<action>_click")` — keep the event name consistent with the screen prefix.
 - Always `safeNavigate(...)` from `NavigationUtil` — never raw `findNavController().navigate(...)`.
 - For navigation with args, build a `XxxFragmentDirections.toY(...)` and pass it to `safeNavigate`.
 
-`XxxLayout` itself NEVER imports `logEvent`, `safeNavigate`, or `findNavController`.
+`XxxLayout` itself NEVER imports `safeNavigate` or `findNavController`.
 
 ---
 
@@ -371,7 +367,7 @@ DO:
 - Pass `onClickLabel = stringResource(...)` and explicit `interactionSource` to every meaningful click.
 - Add `maxLines = 1` + `basicMarquee(Int.MAX_VALUE)` to single-line labels.
 - Give every `LazyColumn`/`LazyRow` item a readable `key = "..."`.
-- Place `logEvent` and `safeNavigate` in the Fragment lambdas, never inside `XxxLayout`.
+- Place `safeNavigate` in the Fragment lambdas, never inside `XxxLayout`.
 - Keep overlays as siblings of the Layout call inside `ComposeView()`.
 - Add `@author Phong-Kaster` on KDoc for non-trivial composables.
 
@@ -380,10 +376,9 @@ DON'T:
 - Use Material `Card { ... }` — write the manual shell.
 - Pre-declare `val cardShape`, `val borderColor`, `val primaryBlue` at the top of every composable.
 - Use `MaterialTheme.typography.bodyMedium` — call `customizedTextStyle(...)` instead.
-- Put `Toast`, `requireContext()`, `safeNavigate`, `logEvent` inside `XxxLayout`.
+- Put `Toast`, `requireContext()`, or `safeNavigate` inside `XxxLayout`.
 - Make `XxxLayout` lambdas required — every callback gets a `= {}` default.
 - Sticky-position UI inside scrollable `content` — that's what `topBar` / `bottomBar` are for.
-- Add `AppUtil.figmaScaleWidth/Height` to new files — only retain where it already exists.
 - Wrap every modifier in `remember { ... }` — only `MutableInteractionSource` needs `remember`.
 - Delete commented-out blocks during unrelated edits; the engineer keeps them on purpose for context.
 

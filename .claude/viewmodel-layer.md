@@ -80,10 +80,10 @@ Conventions:
 ### A. Ongoing Flow collector (most common)
 
 ```kotlin
-private fun collectCompassTheme() {
+private fun collectXxx() {
     viewModelScope.launch {
-        compassThemeRepository.selectedThemeFlow.collectLatest { theme ->
-            _uiState.value = _uiState.value.copy(compassTheme = theme)
+        xxxRepository.selectedItemFlow.collectLatest { item ->
+            _uiState.value = _uiState.value.copy(selectedItem = item)
         }
     }
 }
@@ -94,17 +94,17 @@ Use `.collectLatest` when only the latest value matters (UI state). Use `.collec
 ### B. Combining multiple Flows into one state update
 
 ```kotlin
-private fun collectPermissionDenialCounts() {
+private fun collectXxxAndYyy() {
     viewModelScope.launch {
         combine(
-            settingRepository.numberOfLocationDenialFlow,
-            settingRepository.numberOfNotificationDenialFlow,
-        ) { locationDenials, notificationDenials ->
-            locationDenials to notificationDenials
-        }.collectLatest { (locationDenials, notificationDenials) ->
+            xxxRepository.xxxFlow,
+            yyyRepository.yyyFlow,
+        ) { xxx, yyy ->
+            xxx to yyy
+        }.collectLatest { (xxx, yyy) ->
             _uiState.value = _uiState.value.copy(
-                numberOfLocationDenial = locationDenials,
-                numberOfNotificationDenial = notificationDenials,
+                xxx = xxx,
+                yyy = yyy,
             )
         }
     }
@@ -139,15 +139,15 @@ Write to DataStore or Room with `Dispatchers.IO`. Reads do not need it — the r
 `isLoading` is set to `true` before the work starts and **always** cleared in `finally`, even on exception or early return:
 
 ```kotlin
-private fun loadSurahsAndJuzz() {
+private fun loadXxxAndYyy() {
     viewModelScope.launch {
         _uiState.value = _uiState.value.copy(isLoading = true)
         runCatching {
-            val surahs = quranRepository.getListOfSurah()
-            val juzzList = quranRepository.getListOfJuzz()
+            val xxxList = xxxRepository.getListOfXxx()
+            val yyyList = yyyRepository.getListOfYyy()
             _uiState.value = _uiState.value.copy(
-                listOfSurah = surahs,
-                listOfJuzz = juzzList,
+                listOfXxx = xxxList,
+                listOfYyy = yyyList,
                 isLoading = false,
             )
         }.onFailure {
@@ -160,12 +160,12 @@ private fun loadSurahsAndJuzz() {
 For complex flows with conditional loading, use `try/finally` so the flag always resets:
 
 ```kotlin
-private fun fetchPrayerTimeForToday() {
+private fun fetchXxx() {
     viewModelScope.launch {
         _uiState.value = _uiState.value.copy(isLoading = true)
         try {
-            val times = prayerTimeRepository.prayerTimesForToday.firstOrNull { it != null } ?: return@launch
-            _uiState.value = _uiState.value.copy(prayerTimesForToday = times)
+            val item = xxxRepository.xxxFlow.firstOrNull { it != null } ?: return@launch
+            _uiState.value = _uiState.value.copy(currentXxx = item)
         } finally {
             _uiState.value = _uiState.value.copy(isLoading = false)
         }
@@ -176,21 +176,23 @@ private fun fetchPrayerTimeForToday() {
 ### F. Chained Flow operators
 
 ```kotlin
-// Only re-runs when selectedDate actually changes value
-val selectedDateFlow = _uiState.map { it.selectedDate }.distinctUntilChanged()
+// Only re-runs when selectedId actually changes value
+val selectedIdFlow = _uiState.map { it.selectedId }.distinctUntilChanged()
 
-selectedDateFlow
-    .flatMapLatest { date -> prayerHistoryRepository.getRecordFlow(epochDay = date.toEpochDay()) }
-    .onEach { record -> _uiState.value = _uiState.value.copy(prayerHistoryForSelectedDate = record) }
+selectedIdFlow
+    .flatMapLatest { id -> xxxRepository.getRecordFlow(id = id) }
+    .onEach { record -> _uiState.value = _uiState.value.copy(xxxForSelectedId = record) }
     .launchIn(viewModelScope)
 ```
 
 ### G. Pass-through Flow (direct Fragment observation)
 
-Only expose a repository Flow directly when the Fragment collects it independently from `uiState` — for example, a dark-mode toggle applied at Activity level:
+Only expose a repository Flow directly when the Fragment (or Activity) needs to observe it independently from `uiState` — for example, a system-level setting that affects the entire host Activity, not just this screen:
 
 ```kotlin
-val darkModeFlow = settingRepository.enableDarkModeFlow
+// Use pass-through only when the signal belongs at the Activity level,
+// not when it is just another field in the screen's UiState.
+val systemSettingFlow: Flow<Boolean> = settingRepository.systemSettingFlow
 ```
 
 For everything else, collect in the ViewModel and reflect in `_uiState`.
@@ -198,10 +200,10 @@ For everything else, collect in the ViewModel and reflect in `_uiState`.
 ### H. Early exit on null
 
 ```kotlin
-fun setPrayerDone(prayerType: PrayerTimeType, done: Boolean) {
+fun setXxxDone(id: String, done: Boolean) {
     viewModelScope.launch {
-        val times = _uiState.value.prayerTimesForSelectedDate ?: return@launch
-        // safe to use times below
+        val item = _uiState.value.selectedXxx ?: return@launch
+        // safe to use item below
     }
 }
 ```
@@ -304,19 +306,19 @@ data class XxxUiState(
 When the Layout needs a filtered or transformed view of raw data, compute it as a derived `val` **inside the data class** — not in the ViewModel, not in the Fragment:
 
 ```kotlin
-data class QuranUiState(
-    val listOfSurah: List<Surah> = emptyList(),
-    val favoriteSurahIds: Set<Int> = emptySet(),
-    val surahSearchQuery: String = "",
+data class XxxUiState(
+    val listOfItems: List<XxxModel> = emptyList(),
+    val favoriteIds: Set<Int> = emptySet(),
+    val searchQuery: String = "",
 ) {
-    /** Surahs matching [surahSearchQuery] on English name; all surahs when query is blank. */
-    val surahsForDisplay: List<Surah> =
-        if (surahSearchQuery.isBlank()) listOfSurah
-        else listOfSurah.filter { it.english_name.contains(surahSearchQuery, ignoreCase = true) }
+    /** Items matching [searchQuery] on display name; all items when query is blank. */
+    val itemsForDisplay: List<XxxModel> =
+        if (searchQuery.isBlank()) listOfItems
+        else listOfItems.filter { it.name.contains(searchQuery, ignoreCase = true) }
 
-    /** All surahs whose ID is in [favoriteSurahIds]. */
-    val favoritedSurahs: List<Surah> =
-        listOfSurah.filter { it.surah_id in favoriteSurahIds }
+    /** All items whose ID is in [favoriteIds]. */
+    val favoritedItems: List<XxxModel> =
+        listOfItems.filter { it.id in favoriteIds }
 }
 ```
 
@@ -325,20 +327,20 @@ data class QuranUiState(
 For scroll-to-position, animation triggers, or any "fire once and forget" event — use an incrementing `Int` instead of `SharedFlow` or `Channel`. This survives recomposition and is simpler:
 
 ```kotlin
-data class PrayerUiState(
-    /** Incremented when user taps "Today"; calendar component scrolls to today. */
-    val scrollToTodayTrigger: Int = 0,
+data class XxxUiState(
+    /** Incremented when user taps "scroll to top"; list scrolls to the first item. */
+    val scrollToTopTrigger: Int = 0,
 )
 
 // In ViewModel:
-fun scrollToToday() {
+fun scrollToTop() {
     _uiState.value = _uiState.value.copy(
-        scrollToTodayTrigger = _uiState.value.scrollToTodayTrigger + 1,
+        scrollToTopTrigger = _uiState.value.scrollToTopTrigger + 1,
     )
 }
 
 // In Layout (LaunchedEffect fires every time the Int changes):
-LaunchedEffect(uiState.scrollToTodayTrigger) {
+LaunchedEffect(uiState.scrollToTopTrigger) {
     listState.animateScrollToItem(0)
 }
 ```

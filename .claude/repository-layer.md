@@ -150,53 +150,59 @@ class FooRepositoryImpl(
 
 `toDomain()` / `toEntity()` extension functions live in `data/mapper/`. The repo never imports `androidx.room.*` directly — only the DAO and entity types.
 
-### C. API-backed with in-memory cache
+### C. API-backed with safeApiCallFlow
 
 ```kotlin
 class FooRepositoryImpl(
     private val fooApi: FooApi,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : FooRepository {
 
-    private val _items = MutableStateFlow<List<Foo>>(emptyList())
-    override val items: StateFlow<List<Foo>> = _items.asStateFlow()
-    private val fetchMutex = Mutex()
-
-    override suspend fun refresh(): List<Foo> = fetchMutex.withLock {
-        try {
-            val list = withContext(ioDispatcher) { fooApi.getAll().map { it.toDomain() } }
-            _items.value = list
-            list
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e(TAG, "refresh failed", e)
-            emptyList()
-        }
+    override fun getFooFlow(): Flow<Outcome<List<Foo>>> = safeApiCallFlow {
+        fooApi.getAll().map { it.toDomain() }
     }
 
     companion object { private const val TAG = "FooRepositoryImpl" }
 }
 ```
 
-The mutex prevents two coroutines from racing a cold cache. On failure return `emptyList()` — the impl must never throw to callers.
+`safeApiCallFlow` emits `Outcome.Loading` first, then `Outcome.Success` or `Outcome.Error`. The ViewModel collects this flow and maps each state to `UiState`:
+
+```kotlin
+// In ViewModel:
+private fun collectFoo() {
+    viewModelScope.launch {
+        fooRepository.getFooFlow().collectLatest { outcome ->
+            when (outcome) {
+                is Outcome.Loading -> _uiState.value = _uiState.value.copy(isLoading = true)
+                is Outcome.Success -> _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    items = outcome.data,
+                )
+                is Outcome.Error -> _uiState.value = _uiState.value.copy(isLoading = false)
+            }
+        }
+    }
+}
+```
 
 ### D. Asset (JSON) backed
 
 ```kotlin
+// Foo.kt — must be @Serializable
+@Serializable
+data class Foo(val id: String, val name: String)
+
 class FooRepositoryImpl(
     private val context: Context,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : FooRepository {
 
-    private val gson = Gson()
     @Volatile private var cache: List<Foo>? = null
 
     override suspend fun getAll(): List<Foo> = withContext(ioDispatcher) {
         cache ?: try {
             val json = context.assets.open(ASSET_NAME).reader(Charsets.UTF_8).use { it.readText() }
-            val type = object : TypeToken<List<Foo>>() {}.type
-            val list: List<Foo> = gson.fromJson(json, type) ?: emptyList()
+            val list = Json.decodeFromString<List<Foo>>(json)
             cache = list
             list
         } catch (e: Exception) {
@@ -212,7 +218,7 @@ class FooRepositoryImpl(
 }
 ```
 
-Asset reads block — always `withContext(ioDispatcher)`. Cache the parsed list in memory.
+Asset reads block — always `withContext(ioDispatcher)`. Cache the parsed list in memory. Domain model must be annotated with `@Serializable` (kotlinx.serialization).
 
 ### E. Asset → Room seeding (first-run)
 
@@ -269,23 +275,47 @@ override suspend fun getAddress(lat: Double, lng: Double): String? = withContext
 
 ## Fail-soft error contract
 
-Repositories MUST NOT throw to callers. The interface returns:
+> `Outcome<T>` = `common.Outcome<T>` — the project's sealed class (Loading / Success / Error):
+>
+> ```kotlin
+> // common/Outcome.kt
+> sealed class Outcome<out T> {
+>     data object Loading : Outcome<Nothing>()
+>     data class Success<T>(val data: T) : Outcome<T>()
+>     data class Error(val message: String, val throwable: Throwable? = null) : Outcome<Nothing>()
+> }
+> ```
 
-- `null` for "not available / not found / fetch failed".
-- `emptyList()` / `emptySet()` for collections.
-- A small empty sentinel (e.g. `Page.empty(page, perPage)`) when the caller needs structure to keep moving.
+Repositories MUST NOT throw to callers. Return type by scenario:
 
-Inside the impl:
+| Scenario | Return type |
+|---|---|
+| API-backed stream | `Flow<Outcome<T>>` via `safeApiCallFlow` — emits Loading → Success/Error |
+| Single item fetch, null = not found | `T?` |
+| Fallible one-shot read (multiple steps) | `Outcome<T>` — Success or Error, no Loading |
+| Write / fire-and-forget | `Unit` or `Outcome<Unit>` if caller needs confirmation |
+| Room-backed stream | `Flow<List<T>>` — Room never errors; emit empty list as default |
+
+Inside the impl — API stream (most common):
 
 ```kotlin
-try {
-    val dto = api.getX()
-    dto.toDomain()
-} catch (e: CancellationException) {
-    throw e  // always re-throw — swallowing breaks coroutine cancellation
-} catch (e: Exception) {
-    Log.e(TAG, "getX failed", e)
-    null
+override fun getFooFlow(): Flow<Outcome<List<Foo>>> = safeApiCallFlow {
+    fooApi.getAll().map { it.toDomain() }
+}
+```
+
+Inside the impl — single item one-shot:
+
+```kotlin
+override suspend fun getFoo(id: String): Foo? {
+    return try {
+        fooApi.getFoo(id).toDomain()
+    } catch (e: CancellationException) {
+        throw e  // always re-throw — swallowing breaks coroutine cancellation
+    } catch (e: Exception) {
+        Log.e(TAG, "getFoo($id) failed", e)
+        null
+    }
 }
 ```
 

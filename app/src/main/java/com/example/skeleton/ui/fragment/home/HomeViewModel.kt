@@ -2,7 +2,7 @@ package com.example.skeleton.ui.fragment.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.skeleton.common.Result
+import com.example.skeleton.common.Outcome
 import com.example.skeleton.domain.model.UserAction
 import com.example.skeleton.domain.repository.PostRepository
 import com.example.skeleton.domain.repository.UserActionRepository
@@ -38,14 +38,14 @@ class HomeViewModel(
     fun refreshPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(isRefreshing = true, refreshError = null)
-            when (val result = postRepository.refreshPosts()) {
-                is Result.Success -> {
+            when (val outcome = postRepository.refreshPosts()) {
+                is Outcome.Success -> {
                     _uiState.value = _uiState.value.copy(isRefreshing = false, refreshError = null)
                 }
-                is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(isRefreshing = false, refreshError = result.message)
+                is Outcome.Error -> {
+                    _uiState.value = _uiState.value.copy(isRefreshing = false, refreshError = outcome.message)
                 }
-                is Result.Loading -> { /* kept in isRefreshing */ }
+                is Outcome.Loading -> { /* kept in isRefreshing */ }
             }
         }
     }

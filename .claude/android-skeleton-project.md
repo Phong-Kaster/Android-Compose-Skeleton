@@ -69,7 +69,7 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 - **Network:** Ktor client or Retrofit
 - **Local:** Room, DataStore
 - **Config:** `core.config.AppConfig` (API base URL, timeouts); `common.Constant` (app URLs, datastore name)
-- Leverage use-cases to carry out a complex action that needs time to compute, then decide based on the result. Name use-cases to represent purpose — e.g. `CreateOngoingUseCase`, `CreateDailyNotificationUseCase`.
+- Leverage use-cases when an operation spans two or more repositories, or when the same logic is reused across multiple ViewModels. See `usecase-layer.md` for anatomy, naming, patterns, and DI wiring.
 
 ---
 
@@ -78,7 +78,17 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 - **domain/** — `model/`, `repository/` (interfaces only). No Android or data dependencies.
 - **data/** — `remote/api/` (ApiPath, *Api classes), `remote/dto/`, `remote/util/` (e.g. `safeApiCallFlow`), `mapper/`, `repository/impl/`.
 - **core/** — `config/` (AppConfig), base classes (`CoreActivity`, `CoreFragment`, `CoreLayout`).
-- **common/** — Shared types and constants: `Resource`, `Constant`, `Language`, extensions (e.g. validation).
+- **common/** — Shared types and constants: `Outcome<T>` (custom sealed class below), `Constant`, `Language`, extensions (e.g. validation).
+
+```kotlin
+// common/Outcome.kt
+sealed class Outcome<out T> {
+    data object Loading : Outcome<Nothing>()
+    data class Success<T>(val data: T) : Outcome<T>()
+    data class Error(val message: String, val throwable: Throwable? = null) : Outcome<Nothing>()
+}
+```
+
 - **ui/** — Fragments, ViewModels, components, theme, util (e.g. `UiErrorMapper`).
 - **injection/** — Koin modules (`appModule` includes database, datastore, repository, viewModel, network, locale).
 
@@ -88,7 +98,7 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 
 - Put endpoint paths in `data/remote/api/ApiPath.kt` (use `AppConfig` for base URLs).
 - New API: add `*Api` in `data/remote/api/`, DTO in `data/remote/dto/`, mapper in `data/mapper/`, repository interface in `domain/repository/`, impl in `data/repository/impl/`, bind in `NetworkModule` + `RepositoryModule`.
-- Wrap API calls in `safeApiCallFlow`; expose `Resource<T>` (Loading/Success/Error). Map errors in UI with `Throwable.toUiMessage(context)` (`UiErrorMapper`).
+- Wrap API calls in `safeApiCallFlow`; it returns `Flow<Outcome<T>>` where `Outcome` is the project's custom `common.Outcome<T>` sealed class (Loading / Success / Error) — **not** Kotlin stdlib `kotlin.Outcome`. Map errors in UI with `Throwable.toUiMessage(context)` (`UiErrorMapper`).
 
 ---
 

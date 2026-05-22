@@ -1,6 +1,6 @@
 package com.example.skeleton.domain.repository
 
-import com.example.skeleton.common.Result
+import com.example.skeleton.common.Outcome
 import com.example.skeleton.domain.model.Post
 import kotlinx.coroutines.flow.Flow
 
@@ -14,7 +14,6 @@ interface PostRepository {
     /** Observes posts from local database. Emits whenever cache is updated. */
     fun observePosts(): Flow<List<Post>>
 
-    /** Fetches posts from API and saves to local database. Returns [Result] for error handling. */
-    suspend fun refreshPosts(): Result<Unit>
+    /** Fetches posts from API and saves to local database. Returns [Outcome] for error handling. */
+    suspend fun refreshPosts(): Outcome<Unit>
 }
-

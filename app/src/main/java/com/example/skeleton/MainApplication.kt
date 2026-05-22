@@ -14,6 +14,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
+/**
+ * # [1. Skills For Real Engineers](https://github.com/mattpocock/skills)
+ * # [2. 5 Agent Skills I Use Every Day](https://www.aihero.dev/5-agent-skills-i-use-every-day)
+ */
 class MainApplication : Application() {
 
     override fun onCreate() {

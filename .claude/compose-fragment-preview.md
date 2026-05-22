@@ -12,24 +12,23 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-private fun SettingPrayerLayoutPreview() {
-    SettingPrayerLayout(
-        uiState = SettingPrayerUiState(
-            madhhabIndex = 0,
-            selectedMethodName = "University of Islamic Sciences, Karachi",
-            methodItems = listOf(
-                PrayerMethodInfo("Method name", "Fajar Angle: 18°, Isha Angle: 18°"),
+private fun XxxLayoutPreview() {
+    XxxLayout(
+        uiState = XxxUiState(
+            isLoading = false,
+            listOfItems = listOf(
+                XxxModel(id = 1, name = "Sample item"),
             ),
         ),
     )
 }
 ```
 
-- Preview the layout composable (e.g. `SettingPrayerLayout`), not the fragment itself.
+- Preview the layout composable (e.g. `XxxLayout`), not the fragment itself.
 - Use sample / default UI state with realistic data.
 - Place the preview at the end of the file, after the layout composable.
 - Wrap with `MaterialTheme { ... }` if your composable relies on Material primitives like `HorizontalDivider`.
-- Write multiple `@Preview(name = "...")` when there are meaningful UI states to cover (loaded, empty, loading). See `HomeFragment` (2 previews), `QuranFragment` (5 previews), `CompassFragment` (3 previews). Match that energy.
+- Write multiple `@Preview(name = "...")` when there are meaningful UI states to cover — at minimum: loaded, empty/loading, and any prominent error or edge-case state.
 
 ---
 
@@ -46,7 +45,7 @@ HorizontalDivider(
 )
 
 val shareLabel = stringResource(R.string.share)
-val shareEnabled = latestDua != null
+val shareEnabled = latestItem != null
 val shareColor = if (shareEnabled) {
     ColorTextPrimary
 } else {
@@ -60,7 +59,7 @@ Row(
 **Do this:**
 ```kotlin
 val shareLabel = stringResource(R.string.share)
-val shareEnabled = latestDua != null
+val shareEnabled = latestItem != null
 val shareColor = if (shareEnabled) {
     ColorTextPrimary
 } else {
@@ -127,8 +126,8 @@ If a color value does not need computation, write it inline at its position.
 **Do not:**
 ```kotlin
 @Composable
-fun DuasOfTheDayCard(
-    dua: Duas?,
+fun XxxCard(
+    item: XxxModel?,
     modifier: Modifier = Modifier,
     onHeaderClick: () -> Unit = {},
 ) {
@@ -149,8 +148,8 @@ fun DuasOfTheDayCard(
 **Do this:**
 ```kotlin
 @Composable
-fun DuasOfTheDayCard(
-    dua: Duas?,
+fun XxxCard(
+    item: XxxModel?,
     modifier: Modifier = Modifier,
     onHeaderClick: () -> Unit = {},
 ) {
@@ -171,7 +170,7 @@ fun DuasOfTheDayCard(
 
 ## Text
 
-By default, always add `maxLines = 1` and `modifier = Modifier.basicMarquee(Int.MAX_VALUE)` for single-line `Text`:
+For single-line labels in constrained-width containers (navigation bars, list item titles, card headers) — add `maxLines = 1` and `Modifier.basicMarquee(Int.MAX_VALUE)` so long text scrolls instead of truncating:
 
 ```kotlin
 Text(
@@ -182,6 +181,8 @@ Text(
 )
 ```
 
+Do not apply to paragraph text, error messages, button labels, or any `Text` where wrapping is the correct behavior.
+
 ---
 
 ## Documentation in composables
@@ -191,19 +192,19 @@ Write document short enough that a person can understand in 2 seconds after read
 **Good but not recommended (too long):**
 ```kotlin
 /**
- * When this is **true** (row 0, 2, 4…), the **left** tile is the narrow "square" (it grows with [Modifier.weight])
- * and the **right** tile is the wide "rectangle" (fixed [200.dp]). When **false** (row 1, 3, 5…), we **swap**:
- * left becomes the wide rectangle and right becomes the square. So the grid zig-zags...
+ * When this is **true** (even rows), the **left** tile is the narrow shape and the **right** is the wide shape.
+ * When **false** (odd rows), the layout swaps: left becomes wide, right becomes narrow. This creates a zig-zag
+ * grid pattern across rows...
  */
-val squareFirst = rowIndex % 2 == 0
+val isEvenRow = rowIndex % 2 == 0
 ```
 
 **Do this:**
 ```kotlin
 /**
- * squareFirst answers: is the left position a square shape or a rectangle shape?
+ * isEvenRow answers: should the left tile be the narrow shape this row?
  */
-val squareFirst = rowIndex % 2 == 0
+val isEvenRow = rowIndex % 2 == 0
 ```
 
 ---
