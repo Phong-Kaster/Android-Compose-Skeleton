@@ -121,7 +121,7 @@ Text(
 
 ## Do not pre-declare colors at the top of a composable
 
-If a color value does not need computation, write it inline at its position.
+Pre-declare a color `val` **only** when the same value appears in 3+ places within the same composable — otherwise write it inline.
 
 **Do not:**
 ```kotlin
@@ -137,11 +137,14 @@ fun XxxCard(
     val textPrimary = Color(0xFF091222)
     val borderGray = Color(0xFFE6E7E9)
 
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = cardShape,
-        border = BorderStroke(width = 1.dp, color = borderGray),
-    )
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(width = 1.dp, shape = cardShape, color = borderGray)
+            .background(color = Color.White, shape = cardShape),
+    ) {
+        // content
+    }
 }
 ```
 
@@ -154,15 +157,16 @@ fun XxxCard(
     onHeaderClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    val primaryBlue = Color(0xFF2F70BC)  // only kept because it is used in multiple places inside this composable
+    val primaryBlue = Color(0xFF2F70BC)  // justified: used in 3+ places inside this composable
 
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(width = 1.dp, color = Color(0xFFE6E7E9)),
-    )
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(width = 1.dp, shape = RoundedCornerShape(24.dp), color = Color(0xFFE6E7E9))
+            .background(color = Color.White, shape = RoundedCornerShape(24.dp)),
+    ) {
+        // content
+    }
 }
 ```
 

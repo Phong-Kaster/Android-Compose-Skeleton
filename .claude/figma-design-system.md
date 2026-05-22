@@ -331,7 +331,7 @@ When receiving an order to build UI/UX from Figma — take a moment, think like 
 
 ```kotlin
 @Composable
-private fun HomeLayout() {
+private fun XxxLayout() {
     CoreLayout(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {

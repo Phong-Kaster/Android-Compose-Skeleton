@@ -270,7 +270,7 @@ override fun onCleared() {
  * @param xxxData Loaded model; null while loading or when unavailable.
  * @param listOfItems Full item list from repository.
  * @param showSomePopup True when the bottom sheet should be visible.
- * @param somePopupMessage Non-null while a transient message toast is shown.
+ * @param somePopupMessage Non-null while a transient message is shown; null clears it.
  * @author Phong-Kaster
  */
 data class XxxUiState(
@@ -278,11 +278,11 @@ data class XxxUiState(
 
     // --- Domain data ---
     val xxxData: XxxModel? = null,
-    val listOfItems: List<ItemModel> = emptyList(),
+    val listOfItems: List<XxxModel> = emptyList(),
 
     // --- UI control ---
     val showSomePopup: Boolean = false,
-    val somePopupMessage: PopupMessageContent? = null,
+    val somePopupMessage: String? = null,  // non-null while a transient message is shown; null hides it
 
     // --- Permission counters (only if screen handles permission flows) ---
     val numberOfLocationDenial: Int = 0,

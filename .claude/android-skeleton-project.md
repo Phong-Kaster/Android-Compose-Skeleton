@@ -98,7 +98,7 @@ sealed class Outcome<out T> {
 
 - Put endpoint paths in `data/remote/api/ApiPath.kt` (use `AppConfig` for base URLs).
 - New API: add `*Api` in `data/remote/api/`, DTO in `data/remote/dto/`, mapper in `data/mapper/`, repository interface in `domain/repository/`, impl in `data/repository/impl/`, bind in `NetworkModule` + `RepositoryModule`.
-- Wrap API calls in `safeApiCallFlow`; it returns `Flow<Outcome<T>>` where `Outcome` is the project's custom `common.Outcome<T>` sealed class (Loading / Success / Error) — **not** Kotlin stdlib `kotlin.Outcome`. Map errors in UI with `Throwable.toUiMessage(context)` (`UiErrorMapper`).
+- Wrap API calls in `safeApiCallFlow`; it returns `Flow<Outcome<T>>` where `Outcome` is the project's custom `common.Outcome<T>` sealed class (Loading / Success / Error) — **not** Kotlin stdlib `kotlin.Result` (they are different types with different semantics). Map errors in UI with `Throwable.toUiMessage(context)` (`UiErrorMapper`).
 
 ---
 
@@ -130,16 +130,16 @@ Under any folder, list **subfolders first** (deepest paths expanded), **then** `
 
 **Correct:**
 ```
-ui/fragment/home/
+ui/fragment/xxx/
 ├── component/
-│   ├── HomePermissionBottomSheet.kt
-│   └── HomeRequestPermission.kt
-├── HomeFragment.kt
-├── HomeUiState.kt
-└── HomeViewModel.kt
+│   ├── XxxCard.kt
+│   └── XxxHeader.kt
+├── XxxFragment.kt
+├── XxxUiState.kt
+└── XxxViewModel.kt
 ```
 
-**Avoid:** listing `HomeFragment.kt` before `component/` when `component/` is a child of `home/`.
+**Avoid:** listing `XxxFragment.kt` before `component/` when `component/` is a child of `xxx/`.
 
 ---
 

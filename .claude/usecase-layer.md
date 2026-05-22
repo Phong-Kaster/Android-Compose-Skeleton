@@ -193,7 +193,7 @@ sealed class ValidationOutcome {
 }
 ```
 
-Validation use cases have no repository dependencies and need no DI wiring — instantiate directly in the ViewModel or inject as `factory`.
+Validation use cases have no repository dependencies and are stateless — they can be instantiated directly in the ViewModel (`private val validateXxx = ValidateXxxUseCase()`) or wired as `factory { ValidateXxxUseCase() }` in the DI module. Either is acceptable; prefer DI wiring when the same validator is used in 2+ ViewModels.
 
 ### E. Multi-step operation
 
@@ -366,7 +366,7 @@ DON'T:
 - Use `single { }` in DI — use cases hold no state.
 - Return raw exceptions — use `Outcome.Error(message, throwable)` or a `ValidationOutcome` sealed class.
 - Return `Outcome.Loading` from a use case — Loading is the ViewModel's job via `isLoading` in UiState.
-- Use Kotlin stdlib `kotlin.Outcome` — always use the project's `common.Outcome<T>`.
+- Use Kotlin stdlib `kotlin.Result` — always use the project's `common.Outcome<T>` (they are different types with different semantics).
 - Name with vague verbs: `HandleXxxUseCase`, `ProcessXxxUseCase`, `ManageXxxUseCase` — be specific.
 - Make a Flow-returning function `suspend`.
 

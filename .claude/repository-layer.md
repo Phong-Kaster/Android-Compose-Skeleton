@@ -229,6 +229,21 @@ class FooRepositoryImpl(
 
 ### C. API-backed with safeApiCallFlow
 
+`safeApiCallFlow` is a skeleton utility in `data/remote/util/safeApiCallFlow.kt`. Its full implementation:
+
+```kotlin
+fun <T> safeApiCallFlow(apiCall: suspend () -> T): Flow<Outcome<T>> = flow {
+    emit(Outcome.Loading)
+    try {
+        emit(Outcome.Success(apiCall()))
+    } catch (e: Exception) {
+        emit(Outcome.Error(e.message ?: "Unknown error", e))
+    }
+}.flowOn(Dispatchers.IO)
+```
+
+Use it in repository implementations:
+
 ```kotlin
 class FooRepositoryImpl(
     private val fooApi: FooApi,
