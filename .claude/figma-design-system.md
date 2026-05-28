@@ -1,5 +1,5 @@
 # Figma → Compose
-> Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (highest priority) and `compose-fragment-preview.md`.
+> Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (highest priority) and `jetpack-compose-ui.md`.
 >
 > This file defines how screens are built in this project. Generated Compose code MUST blend into the existing codebase — same shape, same readability, same trade-offs.
 >

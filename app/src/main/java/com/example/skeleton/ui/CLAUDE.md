@@ -1,3 +1,3 @@
 @../../../../../../../../.claude/figma-design-system.md
-@../../../../../../../../.claude/compose-fragment-preview.md
+@../../../../../../../../.claude/jetpack-compose-ui.md
 @../../../../../../../../.claude/viewmodel-layer.md
