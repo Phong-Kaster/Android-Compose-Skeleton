@@ -506,4 +506,76 @@ LazyColumn(
 
 ---
 
+## Self-contained bottom sheet composable
+
+A bottom sheet should own its own display-value derivation. The caller (Fragment) passes domain objects; the sheet computes what to show internally. This keeps the Fragment a thin wiring layer and makes the sheet previewable with only domain data.
+
+### Structure
+
+```
+fun XxxSheet(
+    enable: Boolean = true,           // forwarded to your bottom sheet wrapper
+    domainObject: XxxModel? = null,   // domain type, not pre-formatted String
+    selectedDate: LocalDate = LocalDate.now(),
+    // ... state params (selection, checkboxes, etc.)
+    onDismiss: () -> Unit = {},
+    onConfirm: () -> Unit = {},
+) {
+    // 1. Derive display strings at the top
+    val context = LocalContext.current
+    val title = stringResource(domainObject?.titleRes ?: R.string.fallback)
+    val displayTime = domainObject?.let { ... } ?: ""
+    val displayDate = selectedDate.format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
+    val subtitle = buildString { ... }.takeIf { it.isNotEmpty() }
+
+    // 2. Local functions for enum ↔ index mapping (no if-else in the UI tree)
+    fun selectionIndex() = if (selection == XxxOption.A) 0 else 1
+    fun indexToSelection(i: Int) = if (i == 0) XxxOption.A else XxxOption.B
+
+    // 3. Single bottom sheet wrapper call — no raw ModalBottomSheet
+    XxxBottomSheet(enable = enable, onDismissRequest = onDismiss, ...) {
+        Column(...) {
+            // pure UI — no val declarations, no if-else logic
+            XxxSegmentedControl(
+                selectedIndex = selectionIndex(),
+                onSelect = { onSelectionChange(indexToSelection(it)) },
+                ...
+            )
+        }
+    }
+}
+```
+
+### Rules
+
+- **Domain in, display out.** Accept domain types (`XxxType`, `LocalDate`, `XxxModel?`) — never accept pre-formatted `String` params for things the sheet can derive itself.
+- **All `val` declarations at the top** — none inside the bottom sheet wrapper or `Column` content.
+- **All business logic as named local `fun`** — enum↔index mapping, state derivation, condition checks. The UI tree contains zero inline `if-else`.
+- **`enable: Boolean`** — always forward to the bottom sheet wrapper. Never guard with `if (enable) return`. The caller decides when to show; the composable decides how.
+- **Use your project's bottom sheet wrapper** — avoid raw `ModalBottomSheet` where a wrapper exists. A good wrapper centralises nav-bar insets, `dragHandle = null`, and the hide animation.
+- **`@file:OptIn`** at the top of the file when any Material3 experimental API (e.g. `ripple`) is used across multiple private composables — avoids scattering `@OptIn` on every function.
+
+### Caller pattern (Fragment)
+
+The Fragment passes `uiState` fields directly — no computation, no formatting:
+
+```kotlin
+// ✅ correct — Fragment is a thin wiring layer
+XxxSheet(
+    enable = uiState.sheetTarget != null,
+    domainObject = uiState.sheetTarget ?: XxxModel.default(),
+    selectedDate = uiState.selectedDate,
+    selection = uiState.sheetSelection,
+    onDismiss = { viewModel.dismissSheet() },
+    onConfirm = { viewModel.confirmSheet() },
+)
+
+// ❌ wrong — caller computing display strings that belong in the sheet
+val title = stringResource(uiState.sheetTarget?.titleRes ?: R.string.fallback)
+val timeStr = uiState.sheetTarget?.time?.formatTimeShort(is24Hour(context)) ?: ""
+XxxSheet(title = title, timeStr = timeStr, ...)
+```
+
+---
+
 ## @author Phong-Kaster

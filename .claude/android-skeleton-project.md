@@ -159,4 +159,55 @@ ui/fragment/xxx/
 
 ---
 
+## String content
+
+- Do not set a name for a word because itself has meaning
+  Do not <string name="my_creations_download">Download</string> instead of
+  do <string name="download">Download</string>
+  Do not <string name="my_creations_download_success">Image saved to your gallery</string> instead
+  of do <string name="image_saved_to_gallery">Image saved to your gallery</string>
+
+---
+
+## If-else statement
+
+- When only one condition, do not use if-else statement, just use if statement
+  Do not
+```kotlin
+  bottomBar = {
+        if (!isError) {
+            // do something
+        }
+    }
+```
+
+Instead, do it
+
+```kotlin
+  bottomBar = {
+    if (isError) return@ResultActionRow
+    // do something
+}
+```
+
+
+- When user if-else condition, write if statement with straight forward logic, do not use negative condition
+  Do not
+```kotlin
+  if (!isError) {
+    // do something B
+  } else {
+    // do something A
+  }
+```
+
+Instead, do it
+```kotlin
+  if (isError) {
+    // do something A
+  } else {
+    // do something B
+  }
+```
+
 ## @author Phong-Kaster
