@@ -1,4 +1,4 @@
-    @.claude/android-skeleton-project.md
+@.claude/android-skeleton-project.md
 @.claude/repository-layer.md
 @.claude/viewmodel-layer.md
 
