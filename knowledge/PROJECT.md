@@ -8,7 +8,7 @@
 <!-- Only commands that have actually been run successfully. Record the command and what "success" looks like. -->
 | Purpose | Command | Verified |
 |---|---|---|
-| Build (debug) | `.\gradlew.bat assembleDebug` | no — no capability yet (standing capability requested in bootstrap escalation) |
+| Build (debug) | `.\gradlew.bat assembleDebug` | no — capability granted by the human (2026-07-17) but not yet active: the ledger file `knowledge/capabilities.json` must be created by the human (engine writes are denied by design) |
 | Unit tests | `.\gradlew.bat testDebugUnitTest` | no — same |
 | Lint | `.\gradlew.bat lintDebug` | no — same |
 
@@ -19,7 +19,7 @@ Environment note: Windows 11 host; use `gradlew.bat` (not `./gradlew`). A previo
 Distilled from `CLAUDE.md` + `.claude/*.md` rule files (authoritative, read them before writing code) and the codebase:
 
 - Clean architecture: `domain/` (models + repository interfaces, Android-free) · `data/` (remote, database, datastore, mapper, repository/impl) · `core/` (CoreActivity/CoreFragment/CoreLayout, config, extensions) · `common/` (Outcome, Constant, Language) · `ui/` (fragments, viewmodels, components, theme, util) · `injection/` (Koin modules).
-- App package: `com.example.skeleton`. Single-activity (`MainActivity : CoreActivity`) + fragment navigation; Compose rendered inside fragments via `CoreFragment.ComposeView()`.
+- Source `namespace`: `com.example.skeleton` (Kotlin packages, `R` class). Installable `applicationId`: `com.example.myapplication` (use this for all `adb` device commands). Single-activity (`MainActivity : CoreActivity`) + fragment navigation; Compose rendered inside fragments via `CoreFragment.ComposeView()`.
 - DI: Koin. `MainApplication.onCreate()` starts Koin with `appModule` (which includes database, datastore, repository, viewModel, network, locale modules).
 - ViewModel state: `_uiState.value = _uiState.value.copy(...)` only — never `.update { }`.
 - Every class/function gets KDoc ending with `@author Phong-Kaster`.

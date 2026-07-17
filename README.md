@@ -83,7 +83,7 @@ com.example.skeleton
 │   │   └── setting/           # Setting + language screens and components
 │   ├── modifier/
 │   ├── theme/
-│   └── util/                  # NavigationUtil, PermissionUtil, LocaleManager, error/, …
+│   └── util/                  # NavigationUtil, PermissionUtil, NotificationUtil, LocaleManager, error/, …
 └── util/                      # Small app-level helpers (if any)
 ```
 

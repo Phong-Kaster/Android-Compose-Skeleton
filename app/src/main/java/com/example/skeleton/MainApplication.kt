@@ -7,6 +7,7 @@ import com.example.skeleton.injection.databaseModule
 import com.example.skeleton.injection.datastoreModule
 import com.example.skeleton.injection.repositoryModule
 import com.example.skeleton.injection.viewModelModule
+import com.example.skeleton.ui.util.NotificationUtil
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.security.ProviderInstaller
@@ -30,6 +31,31 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(appModule)
         }
+
+        showColdStartNotification()
+    }
+
+    /**
+     * Greets the user with a "hello world" notification on every cold start.
+     *
+     * Why here? `Application.onCreate()` runs exactly once per process creation — the very
+     * definition of a cold start. Warm starts (returning from background) and screen
+     * rotations reuse the living process, so this function is not called again and no
+     * duplicate notification appears.
+     *
+     * If the user has not granted notification permission yet, [NotificationUtil] stays
+     * silent — the Home screen's permission bottom sheet remains the place to grant it,
+     * and the next cold start after granting shows the greeting.
+     *
+     * @author Phong-Kaster
+     */
+    private fun showColdStartNotification() {
+        NotificationUtil.createChannel(context = this)
+        NotificationUtil.postSimpleMessage(
+            context = this,
+            title = getString(R.string.skeleton),
+            message = getString(R.string.hello_world),
+        )
     }
 
     /**

@@ -36,4 +36,8 @@
     <string name="the_server_is_busy">The server is currently busy. Please try again later</string>
     <string name="we_are_sorry">We’re sorry, something went wrong. Please try again.</string>
     <string name="request_timed_out">Request timed out</string>
+
+    <string name="hello_world">hello world</string>
+    <string name="skeleton">Skeleton</string>
+    <string name="important_updates_and_alerts">Important updates and alerts</string>
 </resources>
