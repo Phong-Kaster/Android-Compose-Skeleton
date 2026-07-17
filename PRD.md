@@ -1,0 +1,1 @@
+add notification that can pop up a simple message as "hello world" each time open app from cold start
