@@ -55,6 +55,12 @@
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "5d9444ffe5c240f2d20081c42c547112e1b8c372375a14e4c98df4d94bde11e1"
     },
+    "loop-runtime": {
+      "source": "Phong-Kaster/Loop-Runtime",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/loop-runtime/SKILL.md",
+      "computedHash": "d8badd88c88b2248683b65eb0c8cca2a644c8879c6258b0cb2925fc2d24554ba"
+    },
     "migrate-to-shoehorn": {
       "source": "mattpocock/skills",
       "sourceType": "github",

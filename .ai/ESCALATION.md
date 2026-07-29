@@ -3,70 +3,41 @@
 > The engine persists this before stopping whenever a decision exceeds its authority.
 > Fill the **Decision** section (decision + rationale), then re-run the Runtime. At most one pending request at a time.
 
-- **Type:** Capability grant — mechanical materialization (E-002)
-- **Iteration:** 2
+- **Type:** DoD evidence decision — criterion 3 denial-path runtime check (E-003)
+- **Iteration:** 3
 - **Timestamp:** 2026-07-17
 
 ## Question
 
-You already approved both capabilities in E-001 (archived in `.ai/STATE.md`). One mechanical step remains that only you can perform: **create the two ledger files below** (the Runtime's immutable deny rules forbid the engine from writing them — that protection worked as designed this iteration).
+Everything else in the DoD is now machine-verified (details in `.ai/TASKS/T-001.md`):
 
-Please create these files with exactly this content, then re-run the Runtime:
+- **c5** build: `./gradlew.bat assembleDebug` → BUILD SUCCESSFUL.
+- **c1** cold start posts a notification with text exactly "hello world" (verified via `dumpsys notification` on your connected API 35 phone).
+- **c2** warm start posts nothing new (same process PID, no notification timestamps changed device-wide).
+- **c3, granted half** — cold start after granting posts the notification (verified live).
+- **c4** channel `skeleton_general` used on API 35; compat no-op below API 26; builds at minSdk 24.
+- **c6** repo-rule checklist recorded in the task file.
 
-**`knowledge/capabilities.json`** (standing — survives this goal):
-
-```json
-{
-  "description": "Standing Capability Ledger. Entries approved by the human in escalation E-001 (2026-07-17).",
-  "entries": [
-    {
-      "intent": "Verify engine work with the repository's Gradle toolchain (build, unit tests, lint)",
-      "command": ".\\gradlew.bat assembleDebug | testDebugUnitTest | lintDebug (and their clean/help variants)",
-      "scope": "consumer repository, Windows shell",
-      "lifetime": "standing",
-      "allow": ["Bash(./gradlew*)", "Bash(gradlew.bat*)", "PowerShell(.\\gradlew.bat*)"]
-    }
-  ]
-}
-```
-
-**`.ai/capabilities.json`** (goal-scoped — expires with `.ai/`):
-
-```json
-{
-  "description": "Goal-scoped Capability Ledger. Entries approved by the human in escalation E-001 (2026-07-17).",
-  "entries": [
-    {
-      "intent": "Machine-verify runtime behavior of the cold-start notification on a connected device/emulator",
-      "command": "adb install / adb shell am force-stop|start / adb shell dumpsys notification / adb shell pm grant|revoke com.example.myapplication android.permission.POST_NOTIFICATIONS",
-      "scope": "the app package com.example.myapplication on the connected device/emulator only",
-      "lifetime": "goal",
-      "allow": ["Bash(adb *)"]
-    }
-  ]
-}
-```
+One check remains that this engine **cannot** perform: *"API 33+ with permission denied → cold start does not crash and posts nothing"* (c3, denied half). Your phone (`b56e2819`, physical Android 15) blocks every shell route to a denied state: `pm grant`/`pm revoke` throw SecurityException and `cmd appops set POST_NOTIFICATION deny` is silently reverted — an OEM restriction, not a Runtime one. How do you want to close this last criterion?
 
 ## Context
 
-T-001 is **implemented and checkpointed** this iteration (`NotificationUtil.kt`, `MainApplication.showColdStartNotification()`, strings, README). What is missing is verification evidence: the engine's `gradlew.bat assembleDebug` attempt was permission-denied because the Runtime compiles permissions only from the ledger files, which do not exist yet. The engine's attempt to create them was denied by the Runtime's deny rules — correct behavior: in V1, ledger entries are written by the human (see `.loop/templates/capabilities.template.json`).
-
-Note: the adb scope package `com.example.myapplication` is confirmed correct — it is the `applicationId` in `app/build.gradle.kts` (the source namespace `com.example.skeleton` differs; both are recorded in `knowledge/PROJECT.md`).
+The code has two independent defenses, both code-review-verified: `postSimpleMessage` returns early when `isNotificationGranted(context)` is false (`checkSelfPermission(POST_NOTIFICATIONS)` on API 33+), and `notify()` is additionally wrapped in `try/catch (SecurityException)`. A crash in the denied state would require both to fail simultaneously.
 
 ## Options Considered
 
-1. You paste the two files above and re-run — engine build-verifies and adb-verifies next iteration, then a fresh invocation runs the DONE-candidate check. Recommended.
-2. You paste only `knowledge/capabilities.json` (skip adb) — engine build-verifies; runtime criteria close by your manual device check, recorded in STATE.
-3. Decline both — engine cannot produce build evidence; DoD criterion 5 would need your manual build output pasted into the Decision below.
+1. **You run a 10-second manual check** on the connected phone: Settings → Apps → the app → Notifications → turn off · force-close the app · reopen from the launcher → it must open normally with no notification · turn notifications back on · force-close and reopen → the "hello world" notification appears. Write pass/fail in the Decision. Recommended — closes c3 with real runtime evidence.
+2. **Enable your OEM's "USB debugging (Security settings)" toggle** (allows shell `pm revoke`); the engine machine-verifies the denied path next iteration.
+3. **Accept the code-review evidence alone** as sufficient for the denied half of c3 (the DoD's evidence spec for c3 lists code review first; the guard + try/catch make a crash implausible).
 
 ## Engine Recommendation
 
-Option 1. Both grants are already approved in substance; this is transcription only. The engine deliberately did not bypass the deny rules (e.g. via shell redirection) — that channel exists but using it would break the trust chain.
+Option 1 — fastest and gives genuine runtime evidence on real hardware. Option 3 is defensible if you trust the double guard.
 
 ## Proposed Capabilities (if any)
 
-None beyond E-001. This request adds no new authority — it asks you to materialize what you already approved, verbatim.
+None. (Option 2 is a device setting, not an engine capability.)
 
 ## Decision
 
-<!-- HUMAN: create the two files above (or state your alternative), add one line here confirming, then re-run the Runtime. -->
+<!-- Human writes here: chosen option + result/rationale. For Option 1, please record pass/fail. -->

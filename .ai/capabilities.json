@@ -1,0 +1,12 @@
+{
+  "description": "Goal-scoped Capability Ledger. Entries approved by the human in escalation E-001 (2026-07-17).",
+  "entries": [
+    {
+      "intent": "Machine-verify runtime behavior of the cold-start notification on a connected device/emulator",
+      "command": "adb install / adb shell am force-stop|start / adb shell dumpsys notification / adb shell pm grant|revoke com.example.myapplication android.permission.POST_NOTIFICATIONS",
+      "scope": "the app package com.example.myapplication on the connected device/emulator only",
+      "lifetime": "goal",
+      "allow": ["Bash(adb *)"]
+    }
+  ]
+}

@@ -5,16 +5,16 @@
 
 ## Current
 
-- **Phase:** escalated (T-001 implemented; verification blocked until capability ledgers are materialized by the human)
+- **Phase:** escalated (T-001 verified except one residual: DoD c3 denial-path runtime check needs a human decision — E-003)
 - **Loop Branch:** loop/hello-world-cold-start-notification
-- **Next task:** T-001 verification (build via `gradlew.bat assembleDebug`, then runtime check via `adb`)
-- **DONE-candidate:** no
+- **Next task:** consume E-003 decision → close T-001 → fresh invocation runs the DONE-candidate check
+- **DONE-candidate:** no (blocked only on E-003)
 
 ## Progress
 
 | Task | Status | Evidence |
 |---|---|---|
-| T-001 | in-progress — code complete, verification pending | Implementation committed this iteration; build + adb evidence pending capability activation (see `.ai/ESCALATION.md`) |
+| T-001 | verified except c3 denial-path residual | Build SUCCESSFUL; runtime evidence on API 35 device for c1/c2/c3-granted/c4 recorded in `.ai/TASKS/T-001.md`; c3 denied-permission runtime check impossible via adb on this device → E-003 |
 
 ## Assumptions
 
@@ -23,6 +23,12 @@
 - "hello world" is the notification content text, verbatim lowercase; title is "Skeleton". Confirmed at the DoD gate.
 
 ## Iteration History
+
+### Iteration 3 — 2026-07-17 (Verify T-001 + consume E-002)
+
+- Attempted: Consumed E-002 (human materialized both capability ledgers verbatim). Verified T-001: `./gradlew.bat assembleDebug` → BUILD SUCCESSFUL in 50s (DoD c5). Installed APK on device `b56e2819` (physical API 35); cold start via `am force-stop` + `am start` posted NotificationRecord with title "Skeleton", text exactly "hello world", channel `skeleton_general` (c1, c4, c3-granted-half). Warm start (HOME → relaunch, same PID 32633) changed no notification timestamps device-wide (c2). Repo-rule checklist was already recorded (c6).
+- Learned: Gradle must be invoked from Git Bash as `./gradlew.bat` (the PowerShell rule form is not matched by the permission compiler). The device blocks all shell paths to a permission-denied state: `pm grant`/`pm revoke` throw SecurityException and `appops set POST_NOTIFICATION deny` silently reverts — OEM restriction, recorded in `knowledge/PROJECT.md`.
+- Reconciled: E-002 archived below. T-001 evidence table completed; single residual (c3 denial-path runtime check) escalated as E-003 with three options (human 10-second manual check / OEM debug toggle / accept code-review evidence). Tier-1 amendment logged.
 
 ### Iteration 2 — 2026-07-17 (Implement T-001 + consume escalation)
 
@@ -37,6 +43,12 @@
 - Reconciled: discoveries recorded in `knowledge/PROJECT.md` and T-001 notes; PRD ambiguities recorded as assumptions above (minor, reversible at DoD gate); DoD approval + toolchain capability + optional `adb` capability escalated.
 
 ## Archived Escalations
+
+### E-002 — Capability ledger materialization (requested Iteration 2, decided 2026-07-17, consumed Iteration 3)
+
+- **Request:** human creates `knowledge/capabilities.json` and `.ai/capabilities.json` verbatim from the already-approved E-001 grants (engine writes to ledgers are denied by design).
+- **Decision (human):** Option 1 — both files created verbatim; "continue".
+- **Consumption note:** Gradle and adb capabilities became active this iteration; both ledger files committed to the Loop Branch for resumability. Quirk: only the Bash rule forms matched at enforcement time (see `knowledge/PROJECT.md` toolchain note).
 
 ### E-001 — Bootstrap: DoD approval + capability grants (requested Iteration 1, decided 2026-07-17, consumed Iteration 2)
 

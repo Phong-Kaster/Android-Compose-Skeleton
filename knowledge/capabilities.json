@@ -1,0 +1,12 @@
+{
+  "description": "Standing Capability Ledger. Entries approved by the human in escalation E-001 (2026-07-17).",
+  "entries": [
+    {
+      "intent": "Verify engine work with the repository's Gradle toolchain (build, unit tests, lint)",
+      "command": ".\\gradlew.bat assembleDebug | testDebugUnitTest | lintDebug (and their clean/help variants)",
+      "scope": "consumer repository, Windows shell",
+      "lifetime": "standing",
+      "allow": ["Bash(./gradlew*)", "Bash(gradlew.bat*)", "PowerShell(.\\gradlew.bat*)"]
+    }
+  ]
+}

@@ -1,11 +1,14 @@
 # Jetpack Compose Ui
-> Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (highest priority) and `figma-design-system.md`.
+
+> Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (
+> highest priority) and `figma-design-system.md`.
 
 ---
 
 ## Always add @Preview for layout composables
 
-When creating or modifying a fragment that uses Jetpack Compose, always add a `@Preview` composable for the layout composable so it can be previewed in Android Studio.
+When creating or modifying a fragment that uses Jetpack Compose, always add a `@Preview` composable
+for the layout composable so it can be previewed in Android Studio.
 
 ```kotlin
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,11 +25,13 @@ private fun XxxLayoutPreview() {
 - Preview the layout composable (e.g. `XxxLayout`), not the fragment itself.
 - Use sample / default UI state with realistic data.
 - Place the preview at the end of the file, after the layout composable.
-- Wrap with `MaterialTheme { ... }` only if your composable uses Material primitives that require a theme (e.g. `HorizontalDivider`). Do not add it by default.
+- Wrap with `MaterialTheme { ... }` only if your composable uses Material primitives that require a
+  theme (e.g. `HorizontalDivider`). Do not add it by default.
 
 ### Multiple named previews for meaningful states
 
-When a composable has 2 or more visually distinct states, add a separate `@Preview(name = "...")` per state. Do not collapse them into one.
+When a composable has 2 or more visually distinct states, add a separate `@Preview(name = "...")`
+per state. Do not collapse them into one.
 
 ```kotlin
 @Preview(name = "Expanded")
@@ -51,6 +56,7 @@ Common state pairs: expanded/collapsed, loading/loaded, empty/filled, enabled/di
 Do not declare `val`/`var` in the middle of composable content. Declare all of them at the top.
 
 **Do not:**
+
 ```kotlin
 HorizontalDivider(...)
 
@@ -60,6 +66,7 @@ Row(...)
 ```
 
 **Do this:**
+
 ```kotlin
 val label = stringResource(R.string.foo)
 val enabled = item != null
@@ -72,9 +79,12 @@ Row(...)
 
 ## When to extract a val vs. write inline
 
-Only extract a `val`/`var` when computation or if-else is needed to decide the value. Otherwise write the value straight at its position. Applies to all composable attributes: `stringResource`, `Color`, `RoundedCornerShape`, `TextStyle`, `Boolean`, and similar.
+Only extract a `val`/`var` when computation or if-else is needed to decide the value. Otherwise
+write the value straight at its position. Applies to all composable attributes: `stringResource`,
+`Color`, `RoundedCornerShape`, `TextStyle`, `Boolean`, and similar.
 
 **Do not:**
+
 ```kotlin
 val label = stringResource(R.string.empty)
 val color = if (isEmpty) Color.Red else Color.Blue
@@ -83,6 +93,7 @@ Text(text = label, color = color, ...)
 ```
 
 **Do this:**
+
 ```kotlin
 val color = if (isEmpty) Color.Red else Color.Blue  // needs if-else, so val is justified
 
@@ -96,6 +107,7 @@ Text(text = stringResource(R.string.empty), color = color, ...)
 If a color value does not need computation, write it inline at its position.
 
 **Do not:**
+
 ```kotlin
 val cardShape = RoundedCornerShape(24.dp)
 val primaryBlue = Color(0xFF2F70BC)
@@ -105,17 +117,21 @@ Card(shape = cardShape, border = BorderStroke(1.dp, borderGray))
 ```
 
 **Do this:**
+
 ```kotlin
 Card(shape = RoundedCornerShape(24.dp), border = BorderStroke(1.dp, Color(0xFFE6E7E9)))
 ```
 
-Only keep a `val` for a color when the same hex is genuinely used in 3+ places inside the same composable.
+Only keep a `val` for a color when the same hex is genuinely used in 3+ places inside the same
+composable.
 
 ---
 
 ## File-level private constants: numbers only
 
-Use `private val` at file level exclusively for **numeric constants** that are reused across composables in the same file — animation durations, offsets, scale factors. Never for `Color`, `RoundedCornerShape`, or `TextStyle`.
+Use `private val` at file level exclusively for **numeric constants** that are reused across
+composables in the same file — animation durations, offsets, scale factors. Never for `Color`,
+`RoundedCornerShape`, or `TextStyle`.
 
 ```kotlin
 // ✅ correct — reused animation timing
@@ -168,6 +184,7 @@ LaunchedEffect(targetAngle) {
 Only use `remember` when the object must survive recomposition or is expensive to allocate.
 
 **Always remember:**
+
 ```kotlin
 // MutableInteractionSource — always
 remember { MutableInteractionSource() }
@@ -181,6 +198,7 @@ val drawPath = remember { Path() }
 ```
 
 **Never `remember`:**
+
 ```kotlin
 // modifier chains — DO NOT
 val mod = remember { Modifier.fillMaxWidth().padding(16.dp) }
@@ -222,18 +240,19 @@ val animatedValue by animateFloatAsState(
 
 ### Animation spec selection
 
-| Use case | Spec |
-|---|---|
+| Use case                      | Spec                              |
+|-------------------------------|-----------------------------------|
 | Size / height / corner radius | `tween(N, LinearOutSlowInEasing)` |
-| Float / rotation | `tween(120)` |
-| Fade in | `tween(300)` |
-| Fade out | `tween(200)` |
+| Float / rotation              | `tween(120)`                      |
+| Fade in                       | `tween(300)`                      |
+| Fade out                      | `tween(200)`                      |
 
 ---
 
 ## `rememberUpdatedState` — latest value inside effects
 
-When a `LaunchedEffect` needs to read a frequently-changing value without being retriggered by it, capture it with `rememberUpdatedState`:
+When a `LaunchedEffect` needs to read a frequently-changing value without being retriggered by it,
+capture it with `rememberUpdatedState`:
 
 ```kotlin
 // animatedValue changes every frame — we want the newest value inside
@@ -250,7 +269,8 @@ LaunchedEffect(target) {
 
 ## `LaunchedEffect` key discipline
 
-The key(s) must be exactly the value(s) that should trigger re-execution — not `Unit` unless the intent is "run once on first composition":
+The key(s) must be exactly the value(s) that should trigger re-execution — not `Unit` unless the
+intent is "run once on first composition":
 
 ```kotlin
 LaunchedEffect(targetValue) { ... }  // reruns whenever targetValue changes ✅
@@ -264,7 +284,9 @@ Do not use `LaunchedEffect(key1, key2)` unless the effect genuinely needs to rer
 
 ## Block comment for non-obvious state machines
 
-Before any composable that has a non-trivial state machine, coordinate transform, or animation invariant — add a plain block comment (not KDoc `/**`) explaining the WHY in plain words. Write as if explaining to someone new.
+Before any composable that has a non-trivial state machine, coordinate transform, or animation
+invariant — add a plain block comment (not KDoc `/**`) explaining the WHY in plain words. Write as
+if explaining to someone new.
 
 ```kotlin
 /*
@@ -280,7 +302,9 @@ Before any composable that has a non-trivial state machine, coordinate transform
  * without being re-triggered on every animation frame.
  */
 @Composable
-fun XxxRotatingComposable(...) { ... }
+fun XxxRotatingComposable(...) {
+    ...
+}
 ```
 
 Do not add this comment to simple layout composables that just render state.
@@ -289,7 +313,8 @@ Do not add this comment to simple layout composables that just render state.
 
 ## Inner local functions inside drawing composables
 
-Acceptable inside private `DrawScope` extension functions or `Canvas` lambdas when transforming coordinate spaces. Keep them one-liners:
+Acceptable inside private `DrawScope` extension functions or `Canvas` lambdas when transforming
+coordinate spaces. Keep them one-liners:
 
 ```kotlin
 Canvas(modifier = Modifier.fillMaxSize()) {
@@ -303,20 +328,22 @@ Canvas(modifier = Modifier.fillMaxSize()) {
 }
 ```
 
-Do not use inner functions in regular layout composables — extract a named private composable instead.
+Do not use inner functions in regular layout composables — extract a named private composable
+instead.
 
 ---
 
 ## Text
 
-By default, always add `maxLines = 1` and `modifier = Modifier.basicMarquee(Int.MAX_VALUE)` for single-line `Text`:
+By default, always add `maxLines = 1` and `modifier = Modifier.basicMarquee(Int.MAX_VALUE)` for
+single-line `Text`:
 
 ```kotlin
 Text(
     text = ...,
-    style = ...,
-    maxLines = 1,
-    modifier = Modifier.basicMarquee(Int.MAX_VALUE),
+style = ...,
+maxLines = 1,
+modifier = Modifier.basicMarquee(Int.MAX_VALUE),
 )
 ```
 
@@ -346,7 +373,8 @@ val squareFirst = rowIndex % 2 == 0
 
 ## Decomposing complex composables
 
-When a composable grows beyond ~60 lines or has multiple visually distinct sections, split it into smaller composables organised in sub-packages under `component/`.
+When a composable grows beyond ~60 lines or has multiple visually distinct sections, split it into
+smaller composables organised in sub-packages under `component/`.
 
 ### Package layout
 
@@ -372,17 +400,19 @@ ui/feature/<area>/<screen>/
 
 ### sub/ vs subcomponent/
 
-| Folder | Use for |
-|---|---|
-| `sub/` | Tiny, single-purpose leaf composables — one button, one badge, one icon+label tile |
-| `subcomponent/` | Medium composables that own a layout section with multiple children |
+| Folder          | Use for                                                                            |
+|-----------------|------------------------------------------------------------------------------------|
+| `sub/`          | Tiny, single-purpose leaf composables — one button, one badge, one icon+label tile |
+| `subcomponent/` | Medium composables that own a layout section with multiple children                |
 
 Example — a horizontal icon strip:
+
 - `XxxFeatureRow.kt` — `LazyRow` container, delegates each tile to `XxxFeatureButton`
 - `sub/XxxFeatureButton.kt` — one icon+label tile
 - `sub/XxxAnimatedBadge.kt` — optional Lottie badge overlaid on a button
 
 Example — a collapsible header with two states:
+
 - `XxxTopBarAdvance.kt` — outer shell, toggles between expanded and collapsed card
 - `XxxCardExpanded.kt` / `XxxCardCollapsed.kt` — two state variants of the inner card
 - `subcomponent/XxxTimeline.kt` — a row of nodes + connectors
@@ -391,7 +421,8 @@ Example — a collapsible header with two states:
 
 ### model/ — screen-local enums and data classes
 
-Put in `model/` any type that exists only to support the screen's UI logic and has no place in `domain/`:
+Put in `model/` any type that exists only to support the screen's UI logic and has no place in
+`domain/`:
 
 ```kotlin
 // Mutual-exclusion enum for overlays on this screen
@@ -407,13 +438,15 @@ data class XxxRowItem(
 )
 ```
 
-Never put domain models here — types needed by the repository or use-case layer belong in `domain/model/`.
+Never put domain models here — types needed by the repository or use-case layer belong in
+`domain/model/`.
 
 ---
 
 ## Mutually exclusive overlay enum
 
-When a screen can show multiple dialogs or bottom sheets (loading, permission, rate…), model them as an enum so only one shows at a time.
+When a screen can show multiple dialogs or bottom sheets (loading, permission, rate…), model them as
+an enum so only one shows at a time.
 
 ```kotlin
 // model/XxxPopup.kt
@@ -423,10 +456,10 @@ enum class XxxPopup { Loading, PermissionRequest, RateSheet }
 ```kotlin
 // In ComposeView():
 val currentPopup = when {
-    uiState.isLoading        -> XxxPopup.Loading
-    shouldShowPermission     -> XxxPopup.PermissionRequest
-    uiState.showRateSheet    -> XxxPopup.RateSheet
-    else                     -> null
+    uiState.isLoading -> XxxPopup.Loading
+    shouldShowPermission -> XxxPopup.PermissionRequest
+    uiState.showRateSheet -> XxxPopup.RateSheet
+    else -> null
 }
 
 XxxLayout(uiState = uiState, ...)
@@ -445,9 +478,11 @@ XxxRateSheet(enabled = currentPopup == XxxPopup.RateSheet, ...)
 
 ## Manual spacing wrapper for animated LazyColumn items
 
-`Arrangement.spacedBy(N.dp)` breaks visual spacing when an item contains an animated composable (Lottie, `animateContentSize`, `AnimatedContent`). The animation clips or overlaps the gap.
+`Arrangement.spacedBy(N.dp)` breaks visual spacing when an item contains an animated composable (
+Lottie, `animateContentSize`, `AnimatedContent`). The animation clips or overlaps the gap.
 
-Fix: set `verticalArrangement = Arrangement.spacedBy(0.dp)` on the `LazyColumn`, then wrap each animated item in a composable that manually prepends a `Spacer`:
+Fix: set `verticalArrangement = Arrangement.spacedBy(0.dp)` on the `LazyColumn`, then wrap each
+animated item in a composable that manually prepends a `Spacer`:
 
 ```kotlin
 // component/XxxItemSpacer.kt
@@ -467,7 +502,8 @@ item(key = "AnimatedCard") {
 }
 ```
 
-Use this for any `item` whose content contains Lottie, `animateContentSize`, or `AnimatedContent`. Non-animated items at the top (e.g. `stickyHeader`) do not need it.
+Use this for any `item` whose content contains Lottie, `animateContentSize`, or `AnimatedContent`.
+Non-animated items at the top (e.g. `stickyHeader`) do not need it.
 
 ---
 
@@ -501,14 +537,18 @@ LazyColumn(
 ```
 
 - Use `stickyHeader` (not `item`) so the bar stays pinned while content scrolls underneath.
-- `rememberUpdatedState(listState)` ensures the connection lambda always reads the current `LazyListState` without being recreated.
-- The composable inside `stickyHeader` receives `expanded: Boolean` and handles its own collapse animation internally (e.g. `updateTransition` + `animateDp`).
+- `rememberUpdatedState(listState)` ensures the connection lambda always reads the current
+  `LazyListState` without being recreated.
+- The composable inside `stickyHeader` receives `expanded: Boolean` and handles its own collapse
+  animation internally (e.g. `updateTransition` + `animateDp`).
 
 ---
 
 ## Self-contained bottom sheet composable
 
-A bottom sheet should own its own display-value derivation. The caller (Fragment) passes domain objects; the sheet computes what to show internally. This keeps the Fragment a thin wiring layer and makes the sheet previewable with only domain data.
+A bottom sheet should own its own display-value derivation. The caller (Fragment) passes domain
+objects; the sheet computes what to show internally. This keeps the Fragment a thin wiring layer and
+makes the sheet previewable with only domain data.
 
 ### Structure
 
@@ -548,12 +588,17 @@ fun XxxSheet(
 
 ### Rules
 
-- **Domain in, display out.** Accept domain types (`XxxType`, `LocalDate`, `XxxModel?`) — never accept pre-formatted `String` params for things the sheet can derive itself.
+- **Domain in, display out.** Accept domain types (`XxxType`, `LocalDate`, `XxxModel?`) — never
+  accept pre-formatted `String` params for things the sheet can derive itself.
 - **All `val` declarations at the top** — none inside the bottom sheet wrapper or `Column` content.
-- **All business logic as named local `fun`** — enum↔index mapping, state derivation, condition checks. The UI tree contains zero inline `if-else`.
-- **`enable: Boolean`** — always forward to the bottom sheet wrapper. Never guard with `if (enable) return`. The caller decides when to show; the composable decides how.
-- **Use your project's bottom sheet wrapper** — avoid raw `ModalBottomSheet` where a wrapper exists. A good wrapper centralises nav-bar insets, `dragHandle = null`, and the hide animation.
-- **`@file:OptIn`** at the top of the file when any Material3 experimental API (e.g. `ripple`) is used across multiple private composables — avoids scattering `@OptIn` on every function.
+- **All business logic as named local `fun`** — enum↔index mapping, state derivation, condition
+  checks. The UI tree contains zero inline `if-else`.
+- **`enable: Boolean`** — always forward to the bottom sheet wrapper. Never guard with
+  `if (enable) return`. The caller decides when to show; the composable decides how.
+- **Use your project's bottom sheet wrapper** — avoid raw `ModalBottomSheet` where a wrapper exists.
+  A good wrapper centralises nav-bar insets, `dragHandle = null`, and the hide animation.
+- **`@file:OptIn`** at the top of the file when any Material3 experimental API (e.g. `ripple`) is
+  used across multiple private composables — avoids scattering `@OptIn` on every function.
 
 ### Caller pattern (Fragment)
 
@@ -577,5 +622,33 @@ XxxSheet(title = title, timeStr = timeStr, ...)
 ```
 
 ---
+
+### Never hide lambda function when the last argument is a composable function
+
+- For example, we have a composable function
+  @Composable
+  fun xyzName(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+  ) {} 
+
+- When use xyzName composable names, do not write
+   xyzName {
+   if (condition) {
+    // do something A
+   } else {
+    // do something B
+   }
+}
+
+- Instead, you must write
+xyzName(
+   context = {
+    if (condition) {
+      // do something A
+    } else {
+      // do something B
+    }
+)
 
 ## @author Phong-Kaster

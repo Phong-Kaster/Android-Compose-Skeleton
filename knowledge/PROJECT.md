@@ -8,11 +8,11 @@
 <!-- Only commands that have actually been run successfully. Record the command and what "success" looks like. -->
 | Purpose | Command | Verified |
 |---|---|---|
-| Build (debug) | `.\gradlew.bat assembleDebug` | no — capability granted by the human (2026-07-17) but not yet active: the ledger file `knowledge/capabilities.json` must be created by the human (engine writes are denied by design) |
-| Unit tests | `.\gradlew.bat testDebugUnitTest` | no — same |
-| Lint | `.\gradlew.bat lintDebug` | no — same |
+| Build (debug) | `./gradlew.bat assembleDebug` (Git Bash) | yes — 2026-07-17, BUILD SUCCESSFUL in 50s |
+| Unit tests | `./gradlew.bat testDebugUnitTest` | no — not yet run |
+| Lint | `./gradlew.bat lintDebug` | no — not yet run |
 
-Environment note: Windows 11 host; use `gradlew.bat` (not `./gradlew`). A previous successful human build exists (`app/build/` contains debug/release intermediates), so the toolchain is known to work on this machine.
+Environment note: Windows 11 host. Invoke Gradle from **Git Bash** as `./gradlew.bat ...` — this matches the granted `Bash(./gradlew*)` capability rule and works (2026-07-17). The PowerShell form `.\gradlew.bat ...` was blocked by the permission compiler despite the `PowerShell(.\gradlew.bat*)` ledger entry — rule-matching quirk; use the Bash form.
 
 ## Architecture Conventions
 
@@ -32,7 +32,8 @@ Distilled from `CLAUDE.md` + `.claude/*.md` rule files (authoritative, read them
 - `AndroidManifest.xml` already declares `android.permission.POST_NOTIFICATIONS`.
 - A notification **permission request flow already exists**: `ui/fragment/home/component/HomeRequestPermission.kt` + `HomePermissionBottomSheet` (Accompanist Permissions), with helper `isNotificationGranted(context)`. There is **no notification posting code** (no channel, no `NotificationCompat`) anywhere in the app yet.
 - Dependencies available: Compose BOM, Koin, Room+KSP, Ktor, DataStore, Accompanist Permissions, core-ktx (includes `NotificationCompat`).
-- Working tree carries an unrelated human modification (`skills-lock.json`) — never stage it.
+- Working tree carries an unrelated human modification (`skills-lock.json`) — never stage it. Runtime infrastructure (`.loop/`, `.agents/skills/`, `.claude/skills/loop-runtime/`) is human-owned and untracked — never stage it either.
+- Connected test device `b56e2819`: **physical Android 15 (API 35)** phone. Launcher activity resolves to `com.example.myapplication/com.example.skeleton.MainActivity`. OEM restriction: `adb shell pm grant|revoke` throws SecurityException (shell lacks GRANT/REVOKE_RUNTIME_PERMISSIONS) and `cmd appops set ... POST_NOTIFICATION deny` is silently reverted — runtime permissions cannot be toggled from shell on this device. `adb shell dumpsys notification --noredact` works and shows full notification text.
 
 ## Sources Consulted
 
