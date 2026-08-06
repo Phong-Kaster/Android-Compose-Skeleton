@@ -210,4 +210,37 @@ Instead, do it
   }
 ```
 
+## Kotlin Lambda Argument Naming Rule
+
+When calling functions that accept callback lambda parameters, always use named arguments for lambda parameters.
+
+Do not use Kotlin trailing lambda syntax when the lambda parameter has a meaningful name (for example: `onNextAction`, `onSuccess`, `onError`, `onClick`, `onBack`, `onNavigate`).
+
+Always write the lambda parameter explicitly.
+
+Bad:
+```kotlin
+AdsUtil.displayInterstitialBeforeGoingBack(activity = requireActivity()) {
+    safeNavigateUp()
+}
+```
+Good:
+```kotlin
+AdsUtil.displayInterstitialBeforeGoingBack(
+    activity = requireActivity(),
+    onNextAction = {
+        safeNavigateUp()
+    }
+)
+```
+Apply this rule especially for:
+
+Navigation callbacks
+UI event callbacks
+Async completion callbacks
+Listener callbacks
+Any lambda parameter with an onXxx naming convention
+
+The goal is to improve readability by making the callback purpose explicit at the call site.
+
 ## @author Phong-Kaster
