@@ -577,5 +577,32 @@ XxxSheet(title = title, timeStr = timeStr, ...)
 ```
 
 ---
+### Never hide lambda function when the last argument is a composable function
+
+- For example, we have a composable function
+  @Composable
+  fun xyzName(
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+  ) {}
+
+- When use xyzName composable names, do not write
+  xyzName {
+  if (condition) {
+  // do something A
+  } else {
+  // do something B
+  }
+  }
+
+- Instead, you must write
+  xyzName(
+  context = {
+  if (condition) {
+  // do something A
+  } else {
+  // do something B
+  }
+  )
 
 ## @author Phong-Kaster
