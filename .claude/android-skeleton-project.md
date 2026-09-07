@@ -210,4 +210,18 @@ Instead, do it
   }
 ```
 
+---
+
+## The 8 Golden Rules of Writing Clean Functions - Clean Code In Kotlin
+
+While writing Kotlin, i need you follow these golden rules but apply them flexible. If functions are too small, write them as possible as simple
+1. Single Responsibility Principle (SRP)
+2. Avoid Side Effects
+3. Do Not Repeat Yourself (DRY)
+4. Minimize Parameters (Group into Classes)
+5. Fail-Fast Principle
+6. Guard Clauses
+7. Single Level of Abstraction Principle (SLAP)
+8. Explicit Receivers
+
 ## @author Phong-Kaster
