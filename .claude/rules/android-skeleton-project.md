@@ -17,7 +17,8 @@ This is a **reusable skeleton app**. Code and structure should stay easy to copy
 
 ## Documentation
 
-- Always add document and write example for each class or function — even if it's just a short paragraph. Higher priority to complex functions and related logic.
+- Always add document and write example for class/object/interface
+- Add documents for complex functions. Opposite, simple function does not need to add document
 - Always add `@author Phong-Kaster` at the end of the KDoc:
   ```kotlin
   /**

@@ -1,5 +1,12 @@
+---
+paths:
+  - "**/*ViewModel.kt"
+  - "**/*UiState.kt"
+  - "**/injection/ViewModelModule.kt"
+---
+
 # ViewModel + UiState Layer
-> Always-on. Portable across projects. If it conflicts with `android-skeleton-project.md` (highest priority), follow that file and mention the conflict.
+> Loaded when working on *ViewModel.kt, *UiState.kt or ViewModelModule.kt. Portable across projects. If it conflicts with `android-skeleton-project.md` (highest priority), follow that file and mention the conflict.
 
 ---
 

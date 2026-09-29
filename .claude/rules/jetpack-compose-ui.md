@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/ui/**/*.kt"
+---
+
 # Jetpack Compose Ui
 > Loaded when working in any file under `ui/`. Use together with `android-skeleton-project.md` (highest priority) and `figma-design-system.md`.
 

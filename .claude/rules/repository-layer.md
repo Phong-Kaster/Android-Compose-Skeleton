@@ -1,5 +1,16 @@
+---
+paths:
+  - "**/data/**/*.kt"
+  - "**/domain/repository/**/*.kt"
+  - "**/domain/model/**/*.kt"
+  - "**/injection/RepositoryModule.kt"
+  - "**/injection/DatabaseModule.kt"
+  - "**/injection/DatastoreModule.kt"
+  - "**/injection/NetworkModule.kt"
+---
+
 # Repository Layer
-> Always-on. Portable across projects. Wins for repository-layer details — if it conflicts with a higher-priority architecture rule, follow that rule and mention the conflict in your summary.
+> Loaded when working on data/, domain/repository/, domain/model/ or data DI modules. Portable across projects. Wins for repository-layer details — if it conflicts with a higher-priority architecture rule, follow that rule and mention the conflict in your summary.
 
 ---
 

@@ -1,5 +1,11 @@
+---
+paths:
+  - "**/domain/usecase/**/*.kt"
+  - "**/injection/UseCaseModule.kt"
+---
+
 # Use Case Layer
-> Always-on. Portable across projects. If it conflicts with `android-skeleton-project.md` (highest priority), follow that file and mention the conflict.
+> Loaded when working on domain/usecase/. Portable across projects. If it conflicts with `android-skeleton-project.md` (highest priority), follow that file and mention the conflict.
 >
 > `Outcome<T>` = `common.Outcome<T>` — the project's sealed class (Loading / Success / Error):
 >

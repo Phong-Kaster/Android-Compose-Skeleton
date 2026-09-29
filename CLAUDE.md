@@ -1,9 +1,3 @@
-@.claude/android-skeleton-project.md
-@.claude/repository-layer.md
-@.claude/view-model-layer.md
-@.claude/jetpack-compose-ui-layer.md
-@.claude/wiki-connection.md
-
 ## Agent skills
 
 ### Issue tracker
