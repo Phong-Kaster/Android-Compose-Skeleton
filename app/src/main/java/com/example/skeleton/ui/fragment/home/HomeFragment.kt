@@ -130,13 +130,13 @@ private fun HomeLayout(
                         onClick = onRefresh,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = stringResource(R.string.home_refresh))
+                        Text(text = stringResource(R.string.refresh))
                     }
                 }
                 if (uiState.posts.isEmpty() && !uiState.isRefreshing) {
                     item {
                         Text(
-                            text = stringResource(R.string.home_no_posts),
+                            text = stringResource(R.string.no_posts_yet_pull_to_refresh_or_tap_refresh),
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }

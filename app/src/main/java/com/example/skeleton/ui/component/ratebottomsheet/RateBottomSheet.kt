@@ -271,7 +271,7 @@ fun RateBottomSheetLayout(
                     decorationBox = { innerTextField ->
                         if (feedbackMessage.isEmpty()) {
                             Text(
-                                text = "${stringResource(R.string.describe_your_feedback)}...",
+                                text = stringResource(R.string.enter_your_feedback),
                                 style = customizedTextStyle(
                                     fontSize = 15,
                                     fontWeight = 400,

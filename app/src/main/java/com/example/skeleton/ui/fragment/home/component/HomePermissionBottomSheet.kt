@@ -123,7 +123,7 @@ private fun PhotosPermissionBottomSheetLayout(
             // Notification switch & rationale
             PermissionSwitch(
                 title = stringResource(R.string.notification),
-                description = stringResource(R.string.allow_notification_to_send_you),
+                description = stringResource(R.string.allow_notification_to_send_you_important_updates_and_alerts),
                 checked = isNotificationEnable,
                 onCheckedChange = { onGrantNotification() },
             )
@@ -137,7 +137,7 @@ private fun PhotosPermissionBottomSheetLayout(
             // Location switch & rationale
             PermissionSwitch(
                 title = stringResource(R.string.location),
-                description = stringResource(R.string.allow_location_to_help_you),
+                description = stringResource(R.string.allow_location_access_to_provide_you_with_relevant_features_and_better_experience),
                 checked = isLocationEnable,
                 onCheckedChange = { onGrantLocation() },
             )
@@ -150,8 +150,8 @@ private fun PhotosPermissionBottomSheetLayout(
                         .height(16.dp)
                 )
                 PermissionSwitch(
-                    title = stringResource(R.string.exact_alarm),
-                    description = stringResource(R.string.allow_exact_alarm_for_prayer_time),
+                    title = stringResource(R.string.alarms_and_reminders),
+                    description = stringResource(R.string.allow_exact_alarms_so_notifications_can_trigger_on_time),
                     checked = isExactAlarmEnable,
                     onCheckedChange = { onGrantExactAlarm() },
                 )

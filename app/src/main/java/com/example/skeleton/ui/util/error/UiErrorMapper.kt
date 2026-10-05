@@ -18,8 +18,8 @@ fun Throwable.toUiMessage(context: Context): String =
             context.getString(R.string.please_check_your_internet_connection)
 
         is ServerResponseException ->
-            context.getString(R.string.the_server_is_busy)
+            context.getString(R.string.the_server_is_currently_busy_please_try_again_later)
 
         else ->
-            context.getString(R.string.we_are_sorry)
+            context.getString(R.string.we_are_sorry_something_went_wrong_please_try_again)
     }
