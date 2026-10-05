@@ -92,3 +92,11 @@ If code changes are needed:
 - Avoid premature optimization.
 - Prefer explicit state handling.
 - Prefer readability to cleverness.
+
+---
+
+## String Resources
+
+Always-on rules for `strings.xml` keys and `R.string.` usage:
+
+@.claude/string-resources.md

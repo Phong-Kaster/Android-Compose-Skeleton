@@ -112,7 +112,7 @@ sealed class Outcome<out T> {
 
 ## Add new string content in strings.xml
 
-- Always append new content to the end of `strings.xml`.
+- Follow `.claude/string-resources.md` (naming, reuse, locales, checks).
 
 ---
 
@@ -157,16 +157,6 @@ ui/fragment/xxx/
 - [ ] If this rule file changed: README still matches new documentation rules.
 - [ ] New remote feature: ApiPath, DTO, mapper, repository + NetworkModule / RepositoryModule (and ViewModelModule if needed).
 - [ ] ViewModels: screen state uses `_uiState.value = _uiState.value.copy(...)` only.
-
----
-
-## String content
-
-- Do not set a name for a word because itself has meaning
-  Do not <string name="my_creations_download">Download</string> instead of
-  do <string name="download">Download</string>
-  Do not <string name="my_creations_download_success">Image saved to your gallery</string> instead
-  of do <string name="image_saved_to_gallery">Image saved to your gallery</string>
 
 ---
 
